@@ -1,3 +1,11 @@
+import sanityStudioConfig from "../studio/sanity.json";
+
+const projectId =
+  process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || sanityStudioConfig.api.projectId;
+
+const dataset =
+  process.env.NEXT_PUBLIC_SANITY_DATASET || sanityStudioConfig.api.dataset || "production";
+
 export const config = {
   /**
    * Find your project ID and dataset in `sanity.json` in your studio project.
@@ -6,8 +14,8 @@ export const config = {
    *
    * https://nextjs.org/docs/basic-features/environment-variables
    **/
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  dataset,
+  projectId,
   apiVersion: "2021-08-11", // or today's date for latest
   /**
    * Set useCdn to `false` if your application require the freshest possible
