@@ -7,12 +7,12 @@ export default function Document() {
         <link rel="preconnect" href="https://fonts.gstatic.com/" />
         <link
           rel="preload"
-          href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans&family=Poppins:wght@400;500;600&display=swap"
           as="style"
         />
         <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Open+Sans&family=Poppins:wght@400;500;600&display=swap"
         />
       </Head>
       <body>

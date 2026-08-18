@@ -6,84 +6,122 @@ import type { GetServerSideProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import type { SanityArchiv } from "types";
+import PageShell from "../../components/UtilityComponents/PageShell";
+import { getThemeColors } from "../../../utils/getThemeColors";
 
-const Archivum = ({ archivData }: { archivData: SanityArchiv }) => {
-  const imageSettings = GetImage(archivData.book_image);
+const WINE = "var(--color-primary-dark, #2c1728)";
+const GOLD = "var(--color-primary-light, #d4af6a)";
+
+const SectionHeading = ({ children }: { children: string }) => (
+  <div className="mb-6 flex items-center gap-3">
+    <span className="h-px w-[22px] shrink-0" style={{ backgroundColor: GOLD }} />
+    <h2
+      className="font-bebas text-[26px] uppercase leading-tight tracking-[0.02em] sm:text-[32px]"
+      style={{ color: WINE }}
+    >
+      {children}
+    </h2>
+  </div>
+);
+
+const Archivum = ({
+  archivData,
+  year,
+}: {
+  archivData: SanityArchiv | null;
+  year: string;
+}) => {
+  const imageSettings = archivData?.book_image
+    ? GetImage(archivData.book_image)
+    : undefined;
+
+  const hasWinners = Boolean(archivData?.winners?.length);
+
   return (
-    <div className="flex min-h-[100vh] min-w-full flex-col space-y-10 bg-primaryLight p-4 pt-[100px] text-white">
-      {imageSettings && (
-        <div className="flex flex-col items-center justify-center space-y-5">
-          <span className="text-center text-6xl">Kivonatos füzet</span>
+    <PageShell
+      // `queryArhivDetails` doesn't select `year`, so it comes from the route slug.
+      number={year}
+      eyebrow="Archívum"
+      title="Korábbi kiadás"
+    >
+      {(!archivData || (!imageSettings && !hasWinners)) && (
+        <p className="font-open text-[16px]" style={{ color: "#6b5a63" }}>
+          Ehhez az évhez még nincs archivált tartalom.
+        </p>
+      )}
+
+      {archivData && imageSettings && (
+        <section className="mb-14">
+          <SectionHeading>Kivonatos füzet</SectionHeading>
           <Link
             href={archivData.book || ""}
             target="_blank"
-            className={classNames(!archivData.book && "pointer-events-none")}
+            rel="noreferrer"
+            className={classNames(
+              "group block w-full max-w-[560px] overflow-hidden rounded-2xl border transition-all duration-300 ease-out",
+              archivData.book
+                ? "hover:-translate-y-1 hover:shadow-[0_14px_30px_rgba(44,23,40,0.16)]"
+                : "pointer-events-none"
+            )}
+            style={{ borderColor: "rgba(44,23,40,0.14)" }}
           >
             <Image
               loader={imageSettings.loader}
               src={imageSettings.src}
               height={563}
               width={801}
-              alt={`${archivData.year} kivonatos füzet`}
-              className="object-cover"
+              alt={`${year} kivonatos füzet`}
+              className="h-auto w-full object-cover"
+              sizes="(max-width: 640px) 100vw, 560px"
               priority
             />
           </Link>
-        </div>
+        </section>
       )}
-      {archivData?.winners && (
-        <div className="flex flex-col space-y-5">
-          <span className="text-center text-6xl">Díjazottak</span>
-          <div className="flex flex-wrap justify-evenly gap-4 md:gap-8">
-            {archivData.winners.map((winner) => (
+
+      {hasWinners && (
+        <section>
+          <SectionHeading>Díjazottak</SectionHeading>
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+            {archivData!.winners.map((winner, wi) => (
               <div
-                key={winner.section.name}
-                className="h-auto w-full bg-lightGray p-2 md:w-[500px] md:p-4"
+                key={`${winner.section?.name ?? "szekcio"}-${wi}`}
+                className="rounded-2xl border p-5 sm:p-6"
+                style={{
+                  borderColor: "rgba(44,23,40,0.14)",
+                  backgroundColor: "rgba(255,255,255,0.55)",
+                }}
               >
-                <table className="w-full border-separate border-spacing-x-3 border-spacing-y-2 md:border-spacing-x-5 md:border-spacing-y-4">
-                  <thead>
-                    <tr>
-                      <th className="w-2/3">
-                        <span className="flex text-left text-2xl text-primaryDark md:text-3xl">
-                          {winner.section.name}
-                        </span>
-                      </th>
-                      <th>
-                        <span className=" flex text-left text-lg text-primaryDark md:text-xl">
-                          ELÉRT EREDMÉNY:
-                        </span>
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {winner.winnerPersons.map((winnerPerson) => (
-                      <tr key={winnerPerson.name}>
-                        <td>
-                          <span
-                            key={winnerPerson.name}
-                            className="whitespace-pre-wrap text-lg text-slate-600 md:text-xl"
-                          >
-                            {winnerPerson.name.split(",").join(",\n")}
-                          </span>
-                        </td>
-                        <td>
-                          <span
-                            key={winnerPerson.name}
-                            className="text-lg text-slate-600 md:text-xl"
-                          >
-                            {winnerPerson.result}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <h3
+                  className="font-bebas mb-4 border-b pb-3 text-[22px] uppercase leading-tight tracking-[0.02em] sm:text-[26px]"
+                  style={{ color: WINE, borderColor: "rgba(44,23,40,0.12)" }}
+                >
+                  {winner.section.name}
+                </h3>
+                <ul className="flex flex-col gap-3.5">
+                  {winner.winnerPersons.map((person) => (
+                    <li key={person.name} className="flex flex-col gap-1">
+                      <span
+                        className="font-open text-[11px] uppercase tracking-[0.16em]"
+                        style={{ color: GOLD }}
+                      >
+                        {person.result}
+                      </span>
+                      <span
+                        className="font-open whitespace-pre-wrap text-[15.5px] leading-snug sm:text-[16.5px]"
+                        style={{ color: "#4a3a44" }}
+                      >
+                        {person.name.split(",").join(",\n")}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
-        </div>
+        </section>
       )}
-    </div>
+    </PageShell>
   );
 };
 
@@ -91,12 +129,16 @@ export const getServerSideProps: GetServerSideProps = async ({
   preview = false,
   params,
 }) => {
-  const archivData = await getClient(preview).fetch(
-    queryArhivDetails(params?.slug as string)
-  );
+  const [archivData, themeColors] = await Promise.all([
+    getClient(preview).fetch(queryArhivDetails(params?.slug as string)),
+    getThemeColors(preview),
+  ]);
+
   return {
     props: {
-      archivData: archivData[0],
+      archivData: archivData?.[0] ?? null,
+      year: (params?.slug as string) ?? "",
+      themeColors,
       preview,
     },
   };

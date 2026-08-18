@@ -2,6 +2,8 @@ import { queryRequirement } from "@lib/queries";
 import { getClient } from "@lib/sanity";
 import RichText from "@utils/RichText";
 import type { SanityRichText } from "types";
+import PageShell from "../../components/UtilityComponents/PageShell";
+import { getThemeColors } from "../../../utils/getThemeColors";
 
 type Props = {
   requirement: SanityRichText[];
@@ -9,21 +11,34 @@ type Props = {
 
 const Kovetelmenyek = ({ requirement }: Props) => {
   return (
-    <div className="flex min-h-[100vh] min-w-full flex-col bg-lightGray px-6 pb-6 pt-[100px] text-black  md:px-10 md:pb-10 lg:bg-primaryLight ">
-      <div className="text-justified h-full w-full lg:bg-lightGray lg:p-6">
-        <div className="prose max-w-none">
+    <PageShell
+      number="02"
+      eyebrow="Általános tudnivalók"
+      title="Követelmények"
+    >
+      {requirement.length === 0 ? (
+        <p className="font-open text-[16px]" style={{ color: "#6b5a63" }}>
+          A követelmények jelenleg nem elérhetőek.
+        </p>
+      ) : (
+        <div className="prose prose-neutral max-w-none">
           <RichText blocks={requirement} />
         </div>
-      </div>
-    </div>
+      )}
+    </PageShell>
   );
 };
 
 export async function getServerSideProps({ preview = false }) {
-  const general = await getClient(preview).fetch(queryRequirement);
+  const [general, themeColors] = await Promise.all([
+    getClient(preview).fetch(queryRequirement),
+    getThemeColors(preview),
+  ]);
+
   return {
     props: {
-      requirement: general[0].requirement,
+      requirement: general?.[0]?.requirement ?? [],
+      themeColors,
       preview,
     },
   };

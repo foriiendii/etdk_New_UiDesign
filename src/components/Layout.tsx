@@ -7,7 +7,9 @@ const Layout = ({ children }: { children: ReactNode }) => {
       style={{
         position: "relative",
         width: "100%",
-        height: "100vh",
+        // `minHeight` rather than a fixed `height: 100vh`: the page is far taller
+        // than the viewport, and on mobile 100vh excludes the browser chrome.
+        minHeight: "100svh",
       }}
     >
       <Header />

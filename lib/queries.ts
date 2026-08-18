@@ -44,6 +44,19 @@ export const queryGeneral = groq`
   paymentLink
 }`;
 
+// Slim variant of queryGeneral for the homepage.
+// Deliberately omits `rules`, `requirement`, `scoringcriteria` and `certificateURL`:
+// those are full rich-text document bodies that the homepage never renders, and they
+// were the bulk of the ~704 kB __NEXT_DATA__ payload warned about by Next.js.
+export const queryGeneralHome = groq`
+*[_type == "general"${publishedDocumentFilter}]{
+  edition,
+  editionRoman,
+  date,
+  generalApplicationRules,
+  paymentLink
+}`;
+
 export const queryFiles = groq`
 *[_type == "files"${publishedDocumentFilter}]{
   files[] {

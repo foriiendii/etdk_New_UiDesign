@@ -1,29 +1,44 @@
 import { queryGeneralRules } from "@lib/queries";
 import { getClient } from "@lib/sanity";
 import RichText from "@utils/RichText";
-import type { SanityGeneral } from "types";
+import type { SanityRichText } from "types";
+import PageShell from "../../components/UtilityComponents/PageShell";
+import { getThemeColors } from "../../../utils/getThemeColors";
 
 type Props = {
-  general: SanityGeneral;
+  rules: SanityRichText[];
 };
 
-const Szabalyzat = ({ general }: Props) => {
+const Szabalyzat = ({ rules }: Props) => {
   return (
-    <div className="flex min-h-[100vh] min-w-full flex-col bg-lightGray px-6 pb-6 pt-[100px] md:px-10 md:pb-10 lg:bg-primaryLight">
-      <div className="h-full w-full lg:bg-lightGray lg:p-6">
-        <div className="prose max-w-none">
-          <RichText blocks={general.rules} />
+    <PageShell
+      number="01"
+      eyebrow="Általános tudnivalók"
+      title="Szabályzat"
+    >
+      {rules.length === 0 ? (
+        <p className="font-open text-[16px]" style={{ color: "#6b5a63" }}>
+          A szabályzat jelenleg nem elérhető.
+        </p>
+      ) : (
+        <div className="prose prose-neutral max-w-none">
+          <RichText blocks={rules} />
         </div>
-      </div>
-    </div>
+      )}
+    </PageShell>
   );
 };
 
 export async function getServerSideProps({ preview = false }) {
-  const generals = await getClient(preview).fetch(queryGeneralRules);
+  const [generals, themeColors] = await Promise.all([
+    getClient(preview).fetch(queryGeneralRules),
+    getThemeColors(preview),
+  ]);
+
   return {
     props: {
-      general: generals[0],
+      rules: generals?.[0]?.rules ?? [],
+      themeColors,
       preview,
     },
   };

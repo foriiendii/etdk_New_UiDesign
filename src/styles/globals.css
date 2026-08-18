@@ -11,4 +11,25 @@
   p {
     @apply font-open;
   }
+
+  /* Stops iOS Safari from auto-inflating text in the tall, narrow sections. */
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Belt-and-braces against a single wide child causing sideways scroll on phones. */
+  body {
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  /* Full-height sections that account for mobile browser chrome.
+     `100vh` on phones measures the viewport *without* the URL bar, so a 100vh
+     hero gets clipped until the user scrolls. `svh` measures the small (visible)
+     viewport instead. The vh line stays first as a fallback. */
+  .min-h-screen-safe {
+    min-height: 100vh;
+    min-height: 100svh;
+  }
 }

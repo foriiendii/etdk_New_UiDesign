@@ -16,13 +16,16 @@ const MyApp: AppType = ({
   const themeColors = pageProps.themeColors as
     | { primaryLight: string; primaryDark: string; secondaryColor: string }
     | undefined;
-  const primaryLight = themeColors?.primaryLight || "#432559";
-  const primaryDark = themeColors?.primaryDark || "#2a2143";
-  const secondaryColor = themeColors?.secondaryColor || "#c7237a";
+  // Fallbacks must match the design system, not the old palette: any page that
+  // doesn't return `themeColors` renders entirely from these values.
+  const primaryLight = themeColors?.primaryLight || "#d4af6a"; // gold
+  const primaryDark = themeColors?.primaryDark || "#2c1728"; // wine
+  const secondaryColor = themeColors?.secondaryColor || "#e7a9b4"; // blush
 
   return (
     <>
       <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <style>
           {`:root {
             --color-primary-light: ${primaryLight};

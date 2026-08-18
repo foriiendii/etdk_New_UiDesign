@@ -2,7 +2,7 @@ import {
   queryApplicate,
   queryArchivsBasic,
   queryContact,
-  queryGeneral,
+  queryGeneralHome,
   queryNews,
   queryOrg,
   querySponsor,
@@ -88,14 +88,28 @@ const Home: NextPage<Props> = ({
 };
 
 export async function getServerSideProps({ preview = false }) {
-  const sponsors = await getClient(preview).fetch(querySponsor);
-  const organizers = await getClient(preview).fetch(queryOrg);
-  const contacts = await getClient(preview).fetch(queryContact);
-  const generals = await getClient(preview).fetch(queryGeneral);
-  const applicate = await getClient(preview).fetch(queryApplicate);
-  const news = await getClient(preview).fetch(queryNews);
-  const archivs = await getClient(preview).fetch(queryArchivsBasic);
-  const themeColors = await getThemeColors(preview);
+  const client = getClient(preview);
+
+  // Run every fetch in parallel instead of eight sequential round-trips to Sanity.
+  const [
+    sponsors,
+    organizers,
+    contacts,
+    generals,
+    applicate,
+    news,
+    archivs,
+    themeColors,
+  ] = await Promise.all([
+    client.fetch(querySponsor),
+    client.fetch(queryOrg),
+    client.fetch(queryContact),
+    client.fetch(queryGeneralHome),
+    client.fetch(queryApplicate),
+    client.fetch(queryNews),
+    client.fetch(queryArchivsBasic),
+    getThemeColors(preview),
+  ]);
 
   return {
     props: {

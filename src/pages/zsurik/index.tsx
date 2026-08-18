@@ -1,6 +1,11 @@
 import { querySectionScorers } from "@lib/queries";
 import { getClient } from "@lib/sanity";
 import { sortByHungarianName } from "@utils/sortByHungarianName";
+import PageShell from "../../components/UtilityComponents/PageShell";
+import { getThemeColors } from "../../../utils/getThemeColors";
+
+const WINE = "var(--color-primary-dark, #2c1728)";
+const GOLD = "var(--color-primary-light, #d4af6a)";
 
 type Section = {
   name: string;
@@ -13,52 +18,69 @@ type Props = {
 
 const Zsurik = ({ sections }: Props) => {
   return (
-    <div className="flex min-h-[100vh] min-w-full flex-col space-y-10 bg-primaryLight p-4 pt-[100px] text-white">
-      <div className="flex flex-wrap justify-evenly gap-4 md:gap-8">
-        {sections.map((s) => (
-          <div
-            key={s.name}
-            className="h-auto w-full bg-lightGray p-2 md:w-[500px] md:p-4"
-          >
-            <table className="w-full border-separate border-spacing-x-3 border-spacing-y-2 md:border-spacing-x-5 md:border-spacing-y-4">
-              <thead>
-                <tr>
-                  <th className="w-2/3">
-                    <span className="flex text-left text-2xl text-primaryDark md:text-3xl">
-                      {s.name}
+    <PageShell
+      number="02"
+      eyebrow="Aktuális kiadás"
+      title="Zsűrik"
+    >
+      {sections.length === 0 ? (
+        <p className="font-open text-[16px]" style={{ color: "#6b5a63" }}>
+          A zsűrik összetétele még nem elérhető.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          {sections.map((section, si) => (
+            <div
+              key={`${section.name}-${si}`}
+              className="rounded-2xl border p-5 sm:p-6"
+              style={{
+                borderColor: "rgba(44,23,40,0.14)",
+                backgroundColor: "rgba(255,255,255,0.55)",
+              }}
+            >
+              <h2
+                className="font-bebas mb-4 border-b pb-3 text-[24px] uppercase leading-tight tracking-[0.02em] sm:text-[28px]"
+                style={{ color: WINE, borderColor: "rgba(44,23,40,0.12)" }}
+              >
+                {section.name}
+              </h2>
+              <ul className="flex flex-col gap-2.5">
+                {(section.scorers || [])
+                  .filter((scorer) => scorer?.name)
+                  .map((scorer, i) => (
+                  <li key={`${scorer.name}-${i}`} className="flex items-baseline gap-3">
+                    <span
+                      className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                      style={{ backgroundColor: GOLD }}
+                      aria-hidden="true"
+                    />
+                    <span
+                      className="font-open whitespace-pre-wrap text-[15.5px] leading-snug sm:text-[16.5px]"
+                      style={{ color: "#4a3a44" }}
+                    >
+                      {scorer.name}
                     </span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {(s.scorers || []).map((scorer) => (
-                  <tr key={scorer.name}>
-                    <td>
-                      <span
-                        key={scorer.name}
-                        className="whitespace-pre-wrap text-lg text-slate-900 md:text-xl"
-                      >
-                        {scorer.name}
-                      </span>
-                    </td>
-                  </tr>
+                  </li>
                 ))}
-              </tbody>
-            </table>
-          </div>
-        ))}
-      </div>
-    </div>
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+    </PageShell>
   );
 };
 
 export async function getServerSideProps({ preview = false }) {
-  const sections: Section[] = await getClient(preview).fetch(
-    querySectionScorers
-  );
+  const [sections, themeColors] = await Promise.all([
+    getClient(preview).fetch(querySectionScorers) as Promise<Section[]>,
+    getThemeColors(preview),
+  ]);
+
   return {
     props: {
-      sections: sortByHungarianName(sections.filter((s) => s.name)),
+      sections: sortByHungarianName((sections ?? []).filter((s) => s?.name)),
+      themeColors,
       preview,
     },
   };
