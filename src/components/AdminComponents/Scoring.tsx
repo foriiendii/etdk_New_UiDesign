@@ -79,10 +79,14 @@ export const ParticipantScoring = ({
       success: <b>Pontozás sikeres</b>,
       error: <b>Pontozás sikertelen</b>,
     });
-  console.log(criteria);
+  const totalScore = Object.keys(scores).reduce(
+    (acc, current) => acc + (scores[current]?.score || 0),
+    0
+  );
+
   return (
-    <div>
-      <table className="border-separate border-spacing-x-3 border-spacing-y-2 ">
+    <div className="rounded-xl border border-[#2c1728]/10 bg-[#fbf8f5] p-4 sm:p-5">
+      <table className="w-full border-separate border-spacing-y-2">
         <tbody>
           {(criteria || []).map((c) => (
             <React.Fragment key={c._id}>
@@ -90,8 +94,8 @@ export const ParticipantScoring = ({
               {(isAfter(new Date(), parseISO("2024-05-15T23:59:59")) ||
                 c.written) && (
                 <tr key={c._id}>
-                  <td className="w-full">
-                    <p>{c.name}</p>
+                  <td className="w-full pr-4">
+                    <p className="font-open text-sm text-[#2c1728]">{c.name}</p>
                   </td>
                   <td>
                     <TextField
@@ -131,6 +135,16 @@ export const ParticipantScoring = ({
                       error={!!errors[c._id]}
                       helperText={errors[c._id]}
                       className="w-32"
+                      sx={{
+                        "& .MuiInputBase-input": {
+                          fontFamily: "Poppins, sans-serif",
+                          fontSize: "0.85rem",
+                        },
+                        "& .MuiInputAdornment-root": {
+                          fontFamily: "Poppins, sans-serif",
+                          color: "#a58d90",
+                        },
+                      }}
                     />
                   </td>
                 </tr>
@@ -149,7 +163,7 @@ export const ParticipantScoring = ({
                       onChange={(e) => setOtdk(e.target.checked)}
                     />
                   }
-                  label="OTDKra jelölés"
+                  label="OTDK-ra jelölés"
                 />
               </FormGroup>
             </td>
@@ -177,16 +191,23 @@ export const ParticipantScoring = ({
                   variant="contained"
                   disabled={Object.keys(errors).length > 0}
                   onClick={scoreParticipantPromise}
-                  className="bg-primaryDark"
+                  sx={{
+                    backgroundColor: "#2c1728",
+                    fontFamily: "Poppins, sans-serif",
+                    fontSize: "0.75rem",
+                    textTransform: "none",
+                    "&:hover": { backgroundColor: "#4a2940" },
+                  }}
                 >
                   Mentés
                 </Button>
               )}
             </td>
-            <td className="pl-4">
-              {Object.keys(scores).reduce((acc, current) => {
-                return acc + (scores[current]?.score || 0);
-              }, 0)}
+            <td className="whitespace-nowrap pl-4 text-right">
+              <span className="font-open text-xs uppercase tracking-[0.12em] text-[#a58d90]">Összesen </span>
+              <strong className="font-open text-lg text-[#2c1728]">
+                {notScorer ? totalScore.toFixed(2) : totalScore}
+              </strong>
             </td>
           </tr>
         </tbody>

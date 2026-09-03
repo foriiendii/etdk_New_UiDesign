@@ -13,8 +13,8 @@ export async function getThemeColors(preview = false) {
   const general = generals[0];
 
   return {
-    primaryLight: general?.primaryLight || "#432559",
-    primaryDark: general?.primaryDark || "#2a2143",
-    secondaryColor: general?.secondaryColor || "#c7237a",
+    primaryLight: general?.primaryLight || "#d4af6a",
+    primaryDark: general?.primaryDark || "#2c1728",
+    secondaryColor: general?.secondaryColor || "#e7a9b4",
   };
 }

@@ -1,9 +1,14 @@
-import { checkIfAdmin, getParticipantScore } from "@lib/queries";
+import {
+  checkIfAdmin,
+  getParticipantScore,
+  getParticipantSections,
+  getSectionStatus,
+} from "@lib/queries";
 import { getClient } from "@lib/sanity";
 import { nanoid } from "nanoid";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
 import { mutate } from "swr";
+import { getApiUser, hasRole, hasSectionAccess } from "@lib/adminAuth";
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,19 +17,47 @@ export default async function handler(
   switch (req.method) {
     case "POST":
       try {
-        const session = await getSession({ req });
-        if (!session) {
-          res.send({ status: 401, message: "Unauthorized" });
+        const user = await getApiUser(req);
+        if (!user || !hasRole(user, ["superadmin", "scorer"])) {
+          return res.status(403).json({ status: 403, message: "Forbidden" });
+        }
+        const participantSections = await getClient(true).fetch(
+          getParticipantSections(req.body.id)
+        );
+        const sectionAccess = await Promise.all(
+          (participantSections?.sections || []).map(
+            (sectionId: string | null) =>
+              sectionId ? hasSectionAccess(user, sectionId) : false
+          )
+        );
+        const hasAccess = sectionAccess.some(Boolean);
+        if (!hasAccess) {
+          return res.status(403).json({ status: 403, message: "Forbidden" });
+        }
+        const sectionStatuses = await Promise.all(
+          (participantSections?.sections || []).map(
+            (sectionId: string | null) =>
+              sectionId ? getClient(true).fetch(getSectionStatus(sectionId)) : null
+          )
+        );
+        if (sectionStatuses.some((section) => section?.closed)) {
+          return res.status(409).json({
+            status: 409,
+            message: "This section is already closed",
+          });
         }
         const adminData = await getClient(true).fetch(
-          checkIfAdmin(session!.user.email)
+          checkIfAdmin(user.email)
         );
+        if (!adminData.length) {
+          return res.status(403).json({ status: 403, message: "Forbidden" });
+        }
         const participantOtherScores = await getClient(true).fetch(
           getParticipantScore(req.body.id)
         );
         const pOnlyScore = participantOtherScores[0].score;
         const findTheScore = pOnlyScore?.find(
-          (p: any) => p.scorer._id === req.body.scorerId
+          (p: any) => p.scorer._id === adminData[0]._id
         );
         const newScore = Object.keys(req.body.scores).map((s) => ({
           score: req.body.scores[s]?.score || 0,
@@ -44,7 +77,7 @@ export default async function handler(
                       {
                         score: newScore,
                         scorer: {
-                          _ref: req.body.scorerId || adminData[0]._id,
+                          _ref: adminData[0]._id,
                           _type: "reference",
                         },
                         _key: nanoid(),
@@ -60,7 +93,7 @@ export default async function handler(
                       {
                         score: newScore,
                         scorer: {
-                          _ref: req.body.scorerId || adminData[0]._id,
+                          _ref: adminData[0]._id,
                           _type: "reference",
                         },
                         _key: nanoid(),
@@ -75,10 +108,12 @@ export default async function handler(
           .then(() => {
             mutate("/section_participants");
           });
-        res.send({ status: 200, body: resp });
+        return res.status(200).json({ status: 200, body: resp });
       } catch (e) {
         console.log(e);
-        res.send({ status: 500, message: e });
+        return res.status(500).json({ status: 500, message: e });
       }
+    default:
+      return res.status(405).json({ message: "Method not allowed" });
   }
 }

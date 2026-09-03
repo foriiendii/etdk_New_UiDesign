@@ -6,7 +6,7 @@
     "build": "npm run build:next",
     "build:sanity": "cd studio && npm run build && cp -r dist ../public/studio",
     "build:next": "next build",
-    "dev": "next dev -p 7421",
+    "dev": "next dev -p 3000",
     "lint": "next lint",
     "start": "next start",
     "sanity": "cd studio && sanity start"

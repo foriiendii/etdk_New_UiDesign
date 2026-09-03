@@ -54,7 +54,8 @@ export const queryGeneralHome = groq`
   editionRoman,
   date,
   generalApplicationRules,
-  paymentLink
+  paymentLink,
+  showJury
 }`;
 
 export const queryFiles = groq`
@@ -88,6 +89,10 @@ export const queryNews = groq`
   name,
   summary,
   date,
+  eventTitle,
+  location,
+  eventDate,
+  registrationUrl,
   description,
   featuredImage
 }`;
@@ -109,7 +114,8 @@ export const queryScoringCriteria = groq`
 
 export const querySchedule = groq`
 *[_type == "general"${publishedDocumentFilter}]{
-  schedule
+  schedule,
+  scheduleItems
 }`;
 
 export const queryArchivsBasic = groq`
@@ -370,6 +376,27 @@ export const getParticipantScore = (id: string) => groq`
     }, 
     _key,
   }
+}`;
+
+export const getParticipantSections = (id: string) => groq`
+*[_type == "participants" && _id == "${id}" ${publishedDocumentFilter}][0] {
+  "sections": [section._ref, merged_section._ref]
+}`;
+
+export const getSectionStatus = (sectionId: string) => groq`
+*[_type == "sections" && _id == "${sectionId}" ${publishedDocumentFilter}][0] {
+  closed
+}`;
+
+export const getParticipantFiles = (id: string) => groq`
+*[_type == "participants" && _id == "${id}" ${publishedDocumentFilter}][0] {
+  name,
+  "section": section._ref,
+  "merged_section": merged_section._ref,
+  "extract": extract.asset->{url, originalFilename},
+  "annex": annex.asset->{url, originalFilename},
+  "contribution": contribution.asset->{url, originalFilename},
+  "essay": essay.asset->{url, originalFilename},
 }`;
 
 export const querySectionScorers = groq`

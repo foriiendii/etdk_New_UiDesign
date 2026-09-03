@@ -28,6 +28,15 @@ export type SanityRichText = {
   children: RichTextChildren[];
 };
 
+export type SanityScheduleItem = {
+  day: string;
+  date?: string;
+  time?: string;
+  title: string;
+  location?: string;
+  description?: string;
+};
+
 export type SanityGeneral = {
   year: string;
   edition: string;
@@ -42,6 +51,7 @@ export type SanityGeneral = {
   primaryDark?: string;
   secondaryColor?: string;
   paymentLink?: string;
+  showJury?: boolean;
 };
 
 export type SanityApplicate = {
@@ -52,11 +62,16 @@ export type SanityApplicate = {
     description: string;
     title: string;
     icon: SanityImage;
+    link?: string;
   }[];
 };
 
 export type SanityNews = {
   description: SanityRichText[];
+  eventTitle?: string;
+  location?: string;
+  eventDate?: string;
+  registrationUrl?: string;
   name: string;
   summary: string;
   date: string;
@@ -241,3 +256,4 @@ export enum UserRoles {
   "Data_checker" = "data_checker",
   "Scorer" = "scorer",
 }
+  

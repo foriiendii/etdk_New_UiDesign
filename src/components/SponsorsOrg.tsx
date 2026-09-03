@@ -1,19 +1,19 @@
 import Image from "next/image";
 import GetImage from "@utils/getImage";
-import type { SanityOrganizer, SanitySponsor } from "types";
+import type { SanitySponsor } from "types";
 
 const WINE = "var(--color-primary-dark, #2c1728)";
 const GOLD = "var(--color-primary-light, #d4af6a)";
+const BLUSH = "var(--color-secondary, #e7a9b4)";
 const LAVENDER = "#cdb8dd";
 const INK_SOFT = "#6b5a63";
 const CREAM = "#f6efe6";
 
 type Props = {
   sponsors: SanitySponsor[];
-  organizers: SanityOrganizer[];
 };
 
-const SponsorsOrg = ({ sponsors, organizers }: Props) => {
+const SponsorsOrg = ({ sponsors }: Props) => {
   return (
     <div
       style={{ backgroundColor: CREAM }}
@@ -50,7 +50,7 @@ const SponsorsOrg = ({ sponsors, organizers }: Props) => {
           className="font-bebas mb-8 mt-3 uppercase leading-[0.98] text-[#2c1728] sm:mb-11"
           style={{ fontSize: "clamp(2.5rem, 1.9rem + 2.6vw, 4rem)" }}
         >
-          <span style={{ color: GOLD }}>07 — </span>Támogatók
+          <span style={{ color: BLUSH }}>07 — </span>Támogatók
         </h2>
 
         <div className="mb-14 flex flex-wrap items-center justify-center gap-x-7 gap-y-8 sm:mb-20 sm:gap-x-10 sm:gap-y-10 lg:gap-12">
@@ -62,55 +62,20 @@ const SponsorsOrg = ({ sponsors, organizers }: Props) => {
             // Sanity assets occasionally arrive without dimension metadata, which
             // would make `ratio` NaN and crash next/image on an invalid width.
             const rawRatio = imageSettings.width / imageSettings.height;
-            const ratio = Number.isFinite(rawRatio) && rawRatio > 0 ? rawRatio : 3;
+            // Clamp so an unusually wide or unusually narrow uploaded logo doesn't
+            // visually dominate/shrink next to the others - everyone gets the same
+            // height and a bounded footprint either way (logo size normalization).
+            const safeRatio = Number.isFinite(rawRatio) && rawRatio > 0 ? rawRatio : 3;
+            const ratio = Math.min(Math.max(safeRatio, 0.7), 2.8);
             return (
               <div
                 key={sponsor.name}
-                className="relative flex h-[52px] max-w-[42vw] items-center opacity-55 grayscale transition-all duration-300 ease-out hover:-translate-y-0.5 hover:opacity-100 hover:grayscale-0 sm:h-[62px] sm:max-w-[30vw] lg:h-[70px] lg:max-w-none"
+                className="relative flex h-[52px] w-[42vw] max-w-[130px] items-center justify-center opacity-55 grayscale transition-all duration-300 ease-out hover:-translate-y-0.5 hover:opacity-100 hover:grayscale-0 sm:h-[62px] sm:w-auto sm:max-w-[170px] lg:h-[70px] lg:max-w-[190px]"
               >
                 <Image
                   loader={imageSettings.loader}
                   src={imageSettings.src}
                   alt={sponsor.name || "sponsor"}
-                  height={70}
-                  width={parseInt((70 * ratio).toFixed())}
-                  className="h-full w-auto max-w-full object-contain"
-                />
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="mb-12 h-px w-full sm:mb-16" style={{ backgroundColor: "rgba(44,23,40,0.12)" }} />
-
-        
-
-        <h2
-          className="font-bebas mb-8 mt-3 uppercase leading-[0.98] text-[#2c1728] sm:mb-11"
-          style={{ fontSize: "clamp(2.5rem, 1.9rem + 2.6vw, 4rem)" }}
-        >
-          <span style={{ color: GOLD }}>08 — </span>Szervezők
-        </h2>
-
-        <div className="flex flex-wrap items-center justify-center gap-x-7 gap-y-8 sm:gap-x-10 sm:gap-y-10 lg:gap-12">
-          {organizers.map((organizer) => {
-            const imageSettings = GetImage(organizer.image);
-            if (!imageSettings) {
-              return <div key="error">Error loading image...</div>;
-            }
-            // Sanity assets occasionally arrive without dimension metadata, which
-            // would make `ratio` NaN and crash next/image on an invalid width.
-            const rawRatio = imageSettings.width / imageSettings.height;
-            const ratio = Number.isFinite(rawRatio) && rawRatio > 0 ? rawRatio : 3;
-            return (
-              <div
-                key={organizer.name}
-                className="relative flex h-[52px] max-w-[42vw] items-center opacity-55 grayscale transition-all duration-300 ease-out hover:-translate-y-0.5 hover:opacity-100 hover:grayscale-0 sm:h-[62px] sm:max-w-[30vw] lg:h-[70px] lg:max-w-none"
-              >
-                <Image
-                  loader={imageSettings.loader}
-                  src={imageSettings.src}
-                  alt={organizer.name || "organizer"}
                   height={70}
                   width={parseInt((70 * ratio).toFixed())}
                   className="h-full w-auto max-w-full object-contain"

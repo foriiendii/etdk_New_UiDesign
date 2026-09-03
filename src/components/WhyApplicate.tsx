@@ -157,7 +157,7 @@ const WhyApplicate = ({
                 transform: visible ? "translateY(0)" : "translateY(18px)",
               }}
             >
-              <span style={{ color: GOLD }}>02 — </span>
+              <span style={{ color: BLUSH }}>02 — </span>
               {title}
             </span>
 
@@ -224,10 +224,16 @@ const WhyApplicate = ({
               {big_benefit.map((benefit, index) => {
                 const accent = ACCENTS[index % ACCENTS.length];
                 const tint = ACCENT_TINTS[index % ACCENT_TINTS.length];
+                const CardTag = benefit.link ? "a" : "div";
                 return (
-                  <div
+                  <CardTag
                     key={benefit.title}
-                    className="group relative pt-4 transition-all duration-500 ease-out hover:-translate-y-1"
+                    {...(benefit.link
+                      ? { href: benefit.link, target: "_blank", rel: "noreferrer" }
+                      : {})}
+                    className={`group relative pt-4 transition-all duration-500 ease-out hover:-translate-y-1 ${
+                      benefit.link ? "cursor-pointer" : ""
+                    }`}
                     style={{
                       opacity: visible ? 1 : 0,
                       // Dropped once revealed so the inline value stops shadowing
@@ -268,7 +274,16 @@ const WhyApplicate = ({
                     >
                       {benefit.description}
                     </p>
-                  </div>
+                    {benefit.link && (
+                      <span
+                        className="mt-3 inline-flex items-center gap-1.5 font-open text-[13px] font-semibold transition-all duration-300 ease-out group-hover:gap-2.5"
+                        style={{ color: accent }}
+                      >
+                        Megnyitás
+                        <span aria-hidden="true">→</span>
+                      </span>
+                    )}
+                  </CardTag>
                 );
               })}
             </div>

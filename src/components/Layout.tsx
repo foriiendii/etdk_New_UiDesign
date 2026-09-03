@@ -1,7 +1,10 @@
 import type { ReactNode } from "react";
+import { useRouter } from "next/router";
 import Header from "./Header";
 
 const Layout = ({ children }: { children: ReactNode }) => {
+  const router = useRouter();
+  const isAdmin = router.pathname.startsWith("/admin");
   return (
     <div
       style={{
@@ -12,7 +15,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
         minHeight: "100svh",
       }}
     >
-      <Header />
+      {!isAdmin && <Header />}
       {children}
     </div>
   );

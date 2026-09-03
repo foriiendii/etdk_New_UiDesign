@@ -4,7 +4,6 @@ import {
   queryContact,
   queryGeneralHome,
   queryNews,
-  queryOrg,
   querySponsor,
 } from "@lib/queries";
 import { getClient } from "@lib/sanity";
@@ -16,7 +15,6 @@ import type {
   SanityContact,
   SanityGeneral,
   SanityNews,
-  SanityOrganizer,
   SanitySponsor,
 } from "types";
 import Contact from "../components/Contact";
@@ -30,7 +28,6 @@ import { getThemeColors } from "../../utils/getThemeColors";
 
 type Props = {
   sponsors: SanitySponsor[];
-  organizers: SanityOrganizer[];
   contact: SanityContact;
   general: SanityGeneral;
   applicate: SanityApplicate;
@@ -40,7 +37,6 @@ type Props = {
 
 const Home: NextPage<Props> = ({
   sponsors,
-  organizers,
   contact,
   general,
   applicate,
@@ -71,9 +67,9 @@ const Home: NextPage<Props> = ({
       <ParticipationCondition
         generalApplicationRules={general.generalApplicationRules}
       />
-      <Year paymentLink={general.paymentLink} />
+      <Year paymentLink={general.paymentLink} showJury={general.showJury !== false} />
       <NewsArchiv news={news} archivs={archivs} />
-      <SponsorsOrg sponsors={sponsors} organizers={organizers} />
+      <SponsorsOrg sponsors={sponsors} />
       <Contact
         address={contact.address}
         email={contact.email}
@@ -93,7 +89,6 @@ export async function getServerSideProps({ preview = false }) {
   // Run every fetch in parallel instead of eight sequential round-trips to Sanity.
   const [
     sponsors,
-    organizers,
     contacts,
     generals,
     applicate,
@@ -102,7 +97,6 @@ export async function getServerSideProps({ preview = false }) {
     themeColors,
   ] = await Promise.all([
     client.fetch(querySponsor),
-    client.fetch(queryOrg),
     client.fetch(queryContact),
     client.fetch(queryGeneralHome),
     client.fetch(queryApplicate),
@@ -119,7 +113,6 @@ export async function getServerSideProps({ preview = false }) {
       archivs,
       news,
       sponsors,
-      organizers,
       preview,
       themeColors,
     },

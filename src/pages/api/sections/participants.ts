@@ -1,9 +1,9 @@
 import { queryAllCriteria, sectionParticipants } from "@lib/queries";
 import { getClient } from "@lib/sanity";
-import { summarizeScores, calculateNomination } from "@utils/scoringHelpers";
+import { averageScores, calculateNomination } from "@utils/scoringHelpers";
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
 import { ParticipantScore, SanityParticipantScoring, UserRoles } from "types";
+import { getApiUser, hasRole, hasSectionAccess } from "@lib/adminAuth";
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,15 +12,20 @@ export default async function handler(
   switch (req.method) {
     case "POST":
       try {
-        const resp: SanityParticipantScoring[] = await getClient(true).fetch(
-          sectionParticipants(req.body.id)
-        );
-        const session = await getSession({ req });
-        if (!session || session.user.role === "participant") {
-          res.send({ status: 401, message: "Unauthorized" });
+        const user = await getApiUser(req);
+        const sectionId = req.body.id as string;
+        if (
+          !user ||
+          !hasRole(user, ["superadmin", "scorer", "section_closer"]) ||
+          !(await hasSectionAccess(user, sectionId))
+        ) {
+          return res.status(403).json({ status: 403, message: "Forbidden" });
         }
-        if (session!.user.role === UserRoles.Scorer) {
-          const loggedInUserEmail = session!.user.email;
+        const resp: SanityParticipantScoring[] = await getClient(true).fetch(
+          sectionParticipants(sectionId)
+        );
+        if (user.role === UserRoles.Scorer) {
+          const loggedInUserEmail = user.email;
           const filterUserScores = resp.map((user) => {
             const userScores = user.score;
             const filteredUserScores = userScores?.filter(
@@ -31,23 +36,23 @@ export default async function handler(
               score: filteredUserScores || null,
             };
           });
-          res.send({ status: 200, body: filterUserScores });
+          return res.status(200).json({ status: 200, body: filterUserScores });
         } else {
           const allCriterias: { name: string; _id: string }[] = await getClient(
             true
           ).fetch(queryAllCriteria);
           const userScoreSum: SanityParticipantScoring[] = resp.map((user) => {
             const userScores = user.score || [];
-            const summarizedScoresByCriteria = summarizeScores(userScores);
+            const averagedScoresByCriteria = averageScores(userScores);
             const { otdk, publish } = calculateNomination(userScores);
             const calculateScore: ParticipantScore[] = Object.entries(
-              summarizedScoresByCriteria
+              averagedScoresByCriteria
             ).map((ssc) => ({
               criteria: {
                 name: allCriterias.find((c) => c._id === ssc[0])?.name || "",
                 _id: ssc[0],
               },
-              score: ssc[1] / userScores.length || 0,
+                score: ssc[1] || 0,
             }));
             return {
               ...user,
@@ -71,11 +76,13 @@ export default async function handler(
               ],
             };
           });
-          res.send({ status: 200, body: userScoreSum });
+          return res.status(200).json({ status: 200, body: userScoreSum });
         }
       } catch (e) {
         console.log(e);
-        res.send({ status: 500, message: e });
+        return res.status(500).json({ status: 500, message: e });
       }
+    default:
+      return res.status(405).json({ message: "Method not allowed" });
   }
 }

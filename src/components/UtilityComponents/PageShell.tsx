@@ -119,7 +119,7 @@ const PageShell = ({ number, eyebrow, title, children }: Props) => {
             className="font-bebas mt-3 max-w-4xl uppercase leading-[0.98] text-[#f4ece9]"
             style={{ fontSize: "clamp(2.5rem, 1.9rem + 2.6vw, 4rem)" }}
           >
-            {number && <span style={{ color: GOLD }}>{number} — </span>}
+            {number && <span style={{ color: BLUSH }}>{number} — </span>}
             {title}
           </h1>
         </div>

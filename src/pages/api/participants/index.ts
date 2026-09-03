@@ -2,6 +2,7 @@ import { getAllParticipants } from "@lib/queries";
 import { getClient } from "@lib/sanity";
 import { NextApiRequest, NextApiResponse } from "next";
 import { summarizeScores, calculateNomination } from "@utils/scoringHelpers";
+import { getApiUser, hasRole } from "@lib/adminAuth";
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,6 +10,10 @@ export default async function handler(
 ) {
   switch (req.method) {
     case "GET":
+      const user = await getApiUser(req);
+      if (!user || !hasRole(user, ["superadmin", "data_checker"])) {
+        return res.status(403).json({ message: "Forbidden" });
+      }
       try {
         const resp = await getClient().fetch(getAllParticipants);
         const participantsWithScoring = resp.map((user: any) => {
@@ -32,10 +37,12 @@ export default async function handler(
                 : publish.false <= publish.true,
           };
         });
-        res.send({ status: 200, body: participantsWithScoring });
+        return res.status(200).json({ status: 200, body: participantsWithScoring });
       } catch (e) {
         console.log(e);
-        res.send({ status: 500, message: e });
+        return res.status(500).json({ status: 500, message: e });
       }
+    default:
+      return res.status(405).json({ message: "Method not allowed" });
   }
 }

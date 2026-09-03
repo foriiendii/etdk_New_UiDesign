@@ -15,6 +15,7 @@ import type { GetServerSidePropsContext } from "next";
 import { getSession } from "next-auth/react";
 
 import ApplicationForm from "src/components/ApplicationForm";
+import AdminShell from "src/components/AdminShell";
 import {
   PersonInputs,
   ProjectInputs,
@@ -46,23 +47,33 @@ const AdminJelentkezes = ({
 }) => {
   if (!Object.keys(participantData).length) {
     return (
-      <div className="flex min-h-[100vh] min-w-full flex-col items-center justify-center space-y-4 bg-white pb-40 pt-[71px]">
-        <p className="text-5xl">Nincs kitöltötött adatod</p>
-      </div>
+      <AdminShell
+        title="Jelentkezésem"
+        description="Töltsd fel és tartsd naprakészen a jelentkezésedhez szükséges személyes adatokat és dokumentumokat."
+      >
+        <div className="flex min-h-[360px] flex-col items-center justify-center rounded-xl border border-dashed border-[#2c1728]/20 bg-white px-6 text-center">
+          <p className="font-open text-lg text-[#766561]">Nincs kitöltött adatod.</p>
+        </div>
+      </AdminShell>
     );
   }
   return (
-    <ApplicationForm
-      universities={universities}
-      faculties={faculties}
-      sections={sections}
-      defaultValues={participantData}
-      paymentLink={paymentLink}
-      closed={isAfter(
-        new Date(),
-        parseISO(`${deadlines.documentUploadEnd}T23:59:59`)
-      )}
-    />
+    <AdminShell
+      title="Jelentkezésem"
+      description="Töltsd fel és tartsd naprakészen a jelentkezésedhez szükséges személyes adatokat és dokumentumokat."
+    >
+      <ApplicationForm
+        universities={universities}
+        faculties={faculties}
+        sections={sections}
+        defaultValues={participantData}
+        paymentLink={paymentLink}
+        closed={isAfter(
+          new Date(),
+          parseISO(`${deadlines.documentUploadEnd}T23:59:59`)
+        )}
+      />
+    </AdminShell>
   );
 };
 

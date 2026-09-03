@@ -154,7 +154,7 @@ const ParticipationCondition = ({
             transitionDelay: "80ms",
           }}
         >
-          <span style={{ color: GOLD }}>03 — </span>Általános részvételi
+          <span style={{ color: BLUSH }}>03 — </span>Általános részvételi
           {/* Hard break only from sm up: on phones the line is too long and the
               forced break pushed the heading into a ragged third line. */}
           <br className="hidden sm:block" /> feltételek

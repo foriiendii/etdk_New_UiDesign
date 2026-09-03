@@ -57,10 +57,79 @@ export default {
       of: [{ type: "block" }],
     },
     {
+      title: "Program (napi bontásban)",
+      name: "scheduleItems",
+      type: "array",
+      description:
+        "Ha ez ki van töltve, a Program oldal ez alapján, napokra bontva (fülekkel) jeleníti meg az eseményeket, a fenti szöveges 'Program' mező helyett.",
+      of: [
+        {
+          title: "Program elem",
+          type: "object",
+          fields: [
+            {
+              title: "Nap",
+              name: "day",
+              type: "string",
+              options: {
+                list: [
+                  { title: "Csütörtök", value: "Csütörtök" },
+                  { title: "Péntek", value: "Péntek" },
+                  { title: "Szombat", value: "Szombat" },
+                  { title: "Vasárnap", value: "Vasárnap" },
+                ],
+              },
+            },
+            {
+              title: "Dátum",
+              name: "date",
+              type: "string",
+              description: "pld: 2026. május 21.",
+            },
+            {
+              title: "Időpont",
+              name: "time",
+              type: "string",
+              description: "pld: 09:00",
+            },
+            {
+              title: "Cím",
+              name: "title",
+              type: "string",
+            },
+            {
+              title: "Helyszín",
+              name: "location",
+              type: "string",
+            },
+            {
+              title: "Leírás",
+              name: "description",
+              type: "text",
+            },
+          ],
+          preview: {
+            select: {
+              title: "title",
+              subtitle: "day",
+            },
+          },
+        },
+      ],
+    },
+    {
       title: "GDPR",
       name: "gdpr",
       type: "array",
       of: [{ type: "block" }],
+    },
+    {
+      title: "Zsűrik fül megjelenítése",
+      name: "showJury",
+      type: "boolean",
+      description:
+        "Ha kikapcsolod, a főoldalon eltűnik a 'Zsűrik' gomb (pl. olyan évben, amikor nincs rá szükség).",
+      initialValue: true,
     },
     {
       title: "Befizetés link",

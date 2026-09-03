@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import type { FormEvent, FocusEvent } from "react";
 import type { SanityContact } from "types";
 
 const WINE = "var(--color-primary-dark, #2c1728)";
@@ -52,6 +53,33 @@ const Contact = ({
   instagram,
 }: Props) => {
   const [sectionRef, visible] = useInView<HTMLDivElement>();
+  const [formName, setFormName] = useState("");
+  const [formEmail, setFormEmail] = useState("");
+  const [formMessage, setFormMessage] = useState("");
+
+  // No backend mail service is wired up (yet) - this opens the visitor's own
+  // mail app with the message pre-filled, the same approach as the header's
+  // "Igazolások kérése" button, addressed to whatever contact email is set
+  // in Sanity (falls back to the ETDK inbox if that's empty).
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const target = email || "etdk@kmdsz.ro";
+    const subject = `Kapcsolatfelvétel – ${formName || "ETDK weboldal"}`;
+    const body = `Név: ${formName}\nEmail: ${formEmail}\n\n${formMessage}`;
+    window.location.href = `mailto:${target}?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+  };
+
+  const inputStyle = {
+    borderColor: "rgba(255,255,255,0.18)",
+  };
+  const focusBorder = (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    e.currentTarget.style.borderColor = GOLD;
+  };
+  const blurBorder = (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    e.currentTarget.style.borderColor = "rgba(255,255,255,0.18)";
+  };
 
   return (
     <div
@@ -219,6 +247,93 @@ const Contact = ({
             ))}
         </div>
       </div>
+
+      <form
+        onSubmit={handleSubmit}
+        className="relative z-10 mb-9 w-full max-w-[560px] rounded-2xl border p-6 text-left transition-all duration-700 ease-out sm:mb-11 sm:p-8"
+        style={{
+          borderColor: "rgba(255,255,255,0.14)",
+          backgroundColor: "rgba(255,255,255,0.04)",
+          opacity: visible ? 1 : 0,
+          transform: visible ? "translateY(0)" : "translateY(14px)",
+          transitionDelay: "230ms",
+        }}
+      >
+        <span
+          className="font-open mb-5 block text-center uppercase"
+          style={{
+            fontWeight: 600,
+            fontSize: "10.5px",
+            letterSpacing: "0.2em",
+            color: GOLD,
+            opacity: 0.85,
+          }}
+        >
+          Írj nekünk
+        </span>
+
+        <div className="flex flex-col gap-4 sm:flex-row">
+          <input
+            type="text"
+            required
+            placeholder="Neved"
+            value={formName}
+            onChange={(e) => setFormName(e.target.value)}
+            onFocus={focusBorder}
+            onBlur={blurBorder}
+            className="font-open w-full rounded-lg border bg-transparent px-4 py-3 text-sm text-[#f4ece9] outline-none transition-colors placeholder:text-[rgba(244,236,233,0.4)]"
+            style={inputStyle}
+          />
+          <input
+            type="email"
+            required
+            placeholder="E-mail címed"
+            value={formEmail}
+            onChange={(e) => setFormEmail(e.target.value)}
+            onFocus={focusBorder}
+            onBlur={blurBorder}
+            className="font-open w-full rounded-lg border bg-transparent px-4 py-3 text-sm text-[#f4ece9] outline-none transition-colors placeholder:text-[rgba(244,236,233,0.4)]"
+            style={inputStyle}
+          />
+        </div>
+
+        <textarea
+          required
+          rows={4}
+          placeholder="Megjegyzésed"
+          value={formMessage}
+          onChange={(e) => setFormMessage(e.target.value)}
+          onFocus={focusBorder}
+          onBlur={blurBorder}
+          className="font-open mt-4 w-full resize-none rounded-lg border bg-transparent px-4 py-3 text-sm text-[#f4ece9] outline-none transition-colors placeholder:text-[rgba(244,236,233,0.4)]"
+          style={inputStyle}
+        />
+
+        <div className="mt-5 flex justify-center sm:justify-start">
+          <button
+            type="submit"
+            className="font-bebas w-full rounded-full border py-3 text-base uppercase tracking-[0.04em] transition-colors duration-200 sm:w-auto sm:px-10"
+            style={{ borderColor: GOLD, color: GOLD }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = GOLD;
+              e.currentTarget.style.color = WINE;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "transparent";
+              e.currentTarget.style.color = GOLD;
+            }}
+          >
+            Küldés
+          </button>
+        </div>
+        <p
+          className="font-open mt-4 text-center text-[11px] leading-5 sm:text-left"
+          style={{ color: "rgba(244,236,233,0.45)" }}
+        >
+          A Küldés gombra kattintva a saját e-mail programod nyílik meg egy
+          előre kitöltött levéllel.
+        </p>
+      </form>
 
       <div
         className="relative z-10 mb-9 flex items-center gap-3.5 transition-all duration-700 ease-out sm:mb-11"

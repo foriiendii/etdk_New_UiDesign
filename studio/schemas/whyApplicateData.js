@@ -41,6 +41,13 @@ export default {
               name: "icon",
               type: "image",
             },
+            {
+              title: "Link (opcionális)",
+              name: "link",
+              type: "url",
+              description:
+                "Ha ki van töltve, a kártya kattinthatóvá válik és erre az oldalra visz (pl. 'Részvétel az OTDK-n' -> OTDK honlapja).",
+            },
           ],
         },
       ],

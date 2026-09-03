@@ -11,15 +11,14 @@ const CARD_BG = "color-mix(in srgb, var(--color-primary-dark, #2c1728) 90%, tran
 
 type YearProps = {
   paymentLink?: string;
+  showJury?: boolean;
 };
 
-const yearElements = [
-  { text: "Határidők", link: "/hataridok" },
-  { text: "Zsűrik", link: "/zsurik" },
-  { text: "Program", link: "/program" },
-  { text: "Díjazottak", link: "/dijazottak" },
-  { text: "Előadások és workshopok" },
-  { text: "Meghírdetett szekciók", link: "/meghirdetett-szekciok" },
+const baseYearElements = [
+  { key: "hataridok", text: "Határidők", link: "/hataridok" },
+  { key: "zsurik", text: "Zsűrik", link: "/zsurik" },
+  { key: "program", text: "Program", link: "/program" },
+  { key: "szekciok", text: "Meghírdetett szekciók", link: "/meghirdetett-szekciok" },
 ];
 
 // Reveals children once, the first time the element scrolls into view.
@@ -83,7 +82,7 @@ const useScrollFade = <S extends HTMLElement, C extends HTMLElement = HTMLDivEle
   return [sectionRef, cueRef] as const;
 };
 
-const Year = ({ paymentLink }: YearProps) => {
+const Year = ({ paymentLink, showJury = true }: YearProps) => {
   const [sectionRef, visible] = useInView<HTMLDivElement>();
   const [scrollSectionRef, scrollCueRef] = useScrollFade<HTMLDivElement>();
   const setSectionNode = (node: HTMLDivElement | null) => {
@@ -91,9 +90,13 @@ const Year = ({ paymentLink }: YearProps) => {
     scrollSectionRef.current = node;
   };
 
+  const yearElements = baseYearElements.filter(
+    (element) => showJury || element.key !== "zsurik"
+  );
+
   const allElements = [
     ...yearElements,
-    ...(paymentLink ? [{ text: "Befizetés", link: paymentLink }] : []),
+    ...(paymentLink ? [{ key: "befizetes", text: "Befizetés", link: paymentLink }] : []),
   ];
 
   return (

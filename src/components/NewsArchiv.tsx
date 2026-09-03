@@ -63,7 +63,10 @@ const NewsArchiv = ({
   // Sort once per news-list change instead of on every render (this used to
   // re-parse every date on every scroll-triggered re-render — expensive).
   const sortedNews = useMemo(
-    () => [...news].sort((a, b) => (isAfter(parseISO(b.date), parseISO(a.date)) ? 1 : -1)),
+    () =>
+      [...news].sort((a, b) =>
+        isAfter(parseISO(b.eventDate || b.date), parseISO(a.eventDate || a.date)) ? 1 : -1
+      ),
     [news]
   );
 
@@ -104,7 +107,7 @@ const NewsArchiv = ({
           className="font-bebas mb-10 mt-3 uppercase leading-[0.98] text-[#f4ece9]"
           style={{ fontSize: "clamp(2.5rem, 1.9rem + 2.6vw, 4rem)" }}
         >
-          <span style={{ color: GOLD }}>05 — </span>Hírek
+          <span style={{ color: BLUSH }}>05 — </span>Hírek
         </h2>
 
         <div className="mb-10 grid grid-cols-1 gap-4 sm:mb-14 sm:gap-[22px] sm:grid-cols-2 lg:grid-cols-3">
@@ -146,7 +149,11 @@ const NewsArchiv = ({
                         className="font-open mb-3 inline-block w-fit rounded-full px-3.5 py-1.5 text-xs font-semibold tracking-[0.03em]"
                         style={{ backgroundColor: GOLD, color: WINE }}
                       >
-                        {newElem.date}
+                        {newElem.eventDate || newElem.date}
+                      </span>
+                      <span className="font-open mb-2 text-xs text-white/65">
+                        {newElem.eventTitle || "ETDK esemény"}
+                        {newElem.location ? ` · ${newElem.location}` : ""}
                       </span>
                       <span
                         className="text-[15.5px] leading-[1.45] text-[#f4ece9] sm:text-[17px] sm:leading-[1.4]"
@@ -154,6 +161,17 @@ const NewsArchiv = ({
                       >
                         {newElem.summary}
                       </span>
+                      {newElem.registrationUrl && (
+                        <a
+                          href={newElem.registrationUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-open mt-3 w-fit rounded-full border border-[#d4af6a] px-3 py-1.5 text-xs font-semibold text-[#d4af6a] transition-colors hover:bg-[#d4af6a] hover:text-[#2c1728]"
+                          onClick={(event) => event.stopPropagation()}
+                        >
+                          Jelentkezés ↗
+                        </a>
+                      )}
                     </div>
                   </div>
                 )
@@ -173,7 +191,7 @@ const NewsArchiv = ({
           className="font-bebas mb-6 mt-3 uppercase leading-[0.98] text-[#f4ece9] sm:mb-8"
           style={{ fontSize: "clamp(2.5rem, 1.9rem + 2.6vw, 4rem)" }}
         >
-          <span style={{ color: GOLD }}>06 — </span>Archívum
+          <span style={{ color: BLUSH }}>06 — </span>Archívum
         </h2>
 
         <div className="mb-4 flex flex-wrap gap-2.5 sm:gap-3.5">

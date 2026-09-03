@@ -1,5 +1,6 @@
 import { getClient } from "@lib/sanity";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getApiUser, hasRole, hasSectionAccess } from "@lib/adminAuth";
 
 export default async function handler(
   req: NextApiRequest,
@@ -7,17 +8,28 @@ export default async function handler(
 ) {
   switch (req.method) {
     case "POST":
+      const user = await getApiUser(req);
+      const sectionId = req.body.id as string;
+      if (
+        !user ||
+        !hasRole(user, ["superadmin", "section_closer"]) ||
+        !(await hasSectionAccess(user, sectionId))
+      ) {
+        return res.status(403).json({ message: "Forbidden" });
+      }
       try {
         const resp = await getClient()
-          .patch(req.body.id, {
+          .patch(sectionId, {
             set: {
               closed: true,
             },
           })
           .commit();
-        res.send({ status: 200, body: resp });
+        return res.status(200).json({ status: 200, body: resp });
       } catch (e) {
-        res.send({ status: 500, message: e });
+        return res.status(500).json({ status: 500, message: e });
       }
+    default:
+      return res.status(405).json({ message: "Method not allowed" });
   }
 }

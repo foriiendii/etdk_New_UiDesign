@@ -3,6 +3,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { isAfter, parseISO } from "date-fns";
 import Image from "next/image";
 import { Fragment, useState } from "react";
+import type { FormEvent } from "react";
 import LinkWrapper from "./UtilityComponents/LinkWrapper";
 import { SanityDeadlines } from "types";
 import { queryAllDeadline } from "@lib/queries";
@@ -27,10 +28,30 @@ const Header = () => {
     async () => await getDeadlines()
   );
 
+  const [openCertModal, setOpenCertModal] = useState(false);
+  const [certName, setCertName] = useState("");
+  const [certEmail, setCertEmail] = useState("");
+  const [certMessage, setCertMessage] = useState("");
+
+  // Opens the visitor's own mail app with the request pre-filled, the same
+  // no-backend-needed approach used by the Kapcsolat form.
+  const handleCertSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const subject = `Igazolás kérése – ${certName || "ETDK weboldal"}`;
+    const body = `Név: ${certName}\nEmail: ${certEmail}\n\n${certMessage}`;
+    window.location.href = `mailto:etdk@kmdsz.ro?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
+    setOpenCertModal(false);
+  };
+
+  const certInputClass =
+    "font-open relative block w-full rounded-lg border border-[#2c1728]/15 bg-white px-4 py-3 text-sm text-[#2c1728] outline-none placeholder:text-[#a58d90] focus:border-[#d4af6a] focus:ring-2 focus:ring-[#d4af6a]/20";
+
   const links = [
     { title: "Tudnivalók", id: "#altalanos_tudnivalok" },
     { title: new Date().getFullYear().toString(), id: "#aktualis_ev" },
-    { title: "Igazolás kérése", id: "https://kmdsz.ro/#contact" },
+    { title: "Igazolások kérése", id: "#igazolasok", isCertModal: true },
     { title: "Hírek", id: "#hirek" },
     { title: "Archívum", id: "#archivum" },
     { title: "Támogatók", id: "#tamogatok" },
@@ -80,19 +101,26 @@ const Header = () => {
         </div>
 
         <nav className="hidden flex-1 items-center justify-end gap-9 lg:flex xl:gap-10">
-          {links.map((link, index) => (
-            <LinkWrapper key={index} href={link.id || ""}>
-              <span
-                className="font-bebas group relative cursor-pointer whitespace-nowrap text-[19px] uppercase tracking-[0.04em] text-[rgba(255,255,255,0.8)] transition-colors duration-200 hover:text-[var(--color-secondary,#e7a9b4)]"
-              >
+          {links.map((link, index) => {
+            const label = (
+              <span className="font-bebas group relative cursor-pointer whitespace-nowrap text-[19px] uppercase tracking-[0.04em] text-[rgba(255,255,255,0.8)] transition-colors duration-200 hover:text-[var(--color-secondary,#e7a9b4)]">
                 {link.title}
                 <span
                   className="absolute -bottom-1 left-0 h-px w-0 transition-all duration-300 group-hover:w-full"
                   style={{ backgroundColor: GOLD }}
                 />
               </span>
-            </LinkWrapper>
-          ))}
+            );
+            return link.isCertModal ? (
+              <span key={index} onClick={() => setOpenCertModal(true)}>
+                {label}
+              </span>
+            ) : (
+              <LinkWrapper key={index} href={link.id || ""}>
+                {label}
+              </LinkWrapper>
+            );
+          })}
           {application && !isLoading && (
             <Link href={application.href}>
               <button
@@ -164,18 +192,32 @@ const Header = () => {
                     below its content, and `justify-center` would then push the
                     first links above the scroll origin where they're unreachable. */}
                 <div className="my-6 flex flex-1 flex-col justify-center gap-1">
-                  {links.map((link, index) => (
-                    <LinkWrapper key={index} href={link.id || ""}>
-                      <div
-                        className="border-b border-[rgba(255,255,255,0.1)] py-4"
-                        onClick={() => setOpenMobileDialog(false)}
-                      >
+                  {links.map((link, index) => {
+                    const row = (
+                      <div className="border-b border-[rgba(255,255,255,0.1)] py-4">
                         <span className="font-bebas text-[26px] uppercase tracking-[0.03em] text-white sm:text-3xl">
                           {link.title}
                         </span>
                       </div>
-                    </LinkWrapper>
-                  ))}
+                    );
+                    return link.isCertModal ? (
+                      <span
+                        key={index}
+                        onClick={() => {
+                          setOpenMobileDialog(false);
+                          setOpenCertModal(true);
+                        }}
+                      >
+                        {row}
+                      </span>
+                    ) : (
+                      <LinkWrapper key={index} href={link.id || ""}>
+                        <span onClick={() => setOpenMobileDialog(false)}>
+                          {row}
+                        </span>
+                      </LinkWrapper>
+                    );
+                  })}
                 </div>
 
                 <div>
@@ -194,6 +236,90 @@ const Header = () => {
                 </div>
               </Dialog.Panel>
             </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition.Root>
+
+      <Transition.Root show={openCertModal} as={Fragment}>
+        <Dialog as="div" className="relative z-50" onClose={setOpenCertModal}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-[rgba(0,0,0,0.7)] transition-opacity" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 z-10 overflow-y-auto">
+            <div className="relative flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                enterTo="opacity-100 translate-y-0 sm:scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              >
+                <Dialog.Panel
+                  className="relative w-full max-w-md transform overflow-hidden rounded-2xl p-6 text-left align-middle shadow-xl transition-all sm:p-8"
+                  style={{ backgroundColor: "#f6efe6" }}
+                >
+                  <Dialog.Title className="mb-1 flex items-start justify-between gap-4">
+                    <span
+                      className="font-bebas text-3xl uppercase leading-none tracking-[0.02em]"
+                      style={{ color: WINE }}
+                    >
+                      Igazolás kérése
+                    </span>
+                    <button
+                      type="button"
+                      className="shrink-0 cursor-pointer"
+                      style={{ color: WINE }}
+                      onClick={() => setOpenCertModal(false)}
+                    >
+                      <XMarkIcon className="h-6 w-6" />
+                    </button>
+                  </Dialog.Title>
+                  <form onSubmit={handleCertSubmit} className="mt-5 space-y-4">
+                    <input
+                      type="text"
+                      required
+                      placeholder="Neved"
+                      value={certName}
+                      onChange={(e) => setCertName(e.target.value)}
+                      className={certInputClass}
+                    />
+                    <input
+                      type="email"
+                      required
+                      placeholder="E-mail"
+                      value={certEmail}
+                      onChange={(e) => setCertEmail(e.target.value)}
+                      className={certInputClass}
+                    />
+                    <textarea
+                      required
+                      rows={3}
+                      placeholder="Megjegyzés"
+                      value={certMessage}
+                      onChange={(e) => setCertMessage(e.target.value)}
+                      className={`${certInputClass} resize-none`}
+                    />
+                    <button
+                      type="submit"
+                      className="group relative flex w-full justify-center rounded-lg bg-[#2c1728] py-3 px-3 font-open text-sm font-semibold text-white transition-colors hover:bg-[#4a2940]"
+                    >
+                      Küldés
+                    </button>
+                  </form>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
           </div>
         </Dialog>
       </Transition.Root>
