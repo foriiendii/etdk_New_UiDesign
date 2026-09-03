@@ -34,7 +34,7 @@ export const OtherField = ({
         rules={{ required: true }}
         render={({ field: { value, onChange }, fieldState: { error } }) => (
           <div className="flex flex-col">
-            <span className="pl-3">{placeholder}</span>
+            <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">{placeholder}</span>
             <input
               onChange={(e) => {
                 onChange(e.target.value);
@@ -46,9 +46,8 @@ export const OtherField = ({
               autoComplete="off"
               type="text"
               className={classNames(
-                "block h-11 w-full rounded-xl border-none pl-3 text-lg font-semibold placeholder:opacity-80 focus:border-primaryDark focus:ring-primaryDark",
-                error ? "ring ring-red-700" : "",
-                `${text} ${bg} placeholder:${text}`
+                "block h-12 w-full rounded-xl border border-[#2c1728]/15 bg-white px-4 font-open text-base font-medium text-[#2c1728] outline-none transition-colors placeholder:font-normal placeholder:text-[#a58d90] focus:border-[#d4af6a] focus:ring-2 focus:ring-[#d4af6a]/20",
+                error ? "ring ring-red-700" : ""
               )}
               placeholder={placeholder}
               disabled={disabled}

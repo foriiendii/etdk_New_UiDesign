@@ -181,4 +181,4 @@ export type Inputs = {
 };
 
 export const inputClasses =
-  "pl-3 border-none block h-11 w-full rounded-xl text-lg font-semibold placeholder:opacity-80 focus:border-primaryDark focus:ring-primaryDark";
+  "block h-12 w-full rounded-xl border border-[#2c1728]/15 bg-white px-4 font-open text-base font-medium text-[#2c1728] outline-none transition-colors placeholder:font-normal placeholder:text-[#a58d90] focus:border-[#d4af6a] focus:ring-2 focus:ring-[#d4af6a]/20";

@@ -56,27 +56,30 @@ export default function Select({
       {({ open }) => (
         <>
           <div className="relative flex flex-col">
-            <span className="pl-3">{placeholder}</span>
+            <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">
+              {placeholder}
+            </span>
             <div
               className={classNames(
-                error ? "ring ring-red-700" : "",
-                `relative h-11 w-full cursor-default rounded-xl py-2 pl-3 pr-10 text-left text-lg shadow-sm focus:border-primaryDark focus:outline-none focus:ring-1 focus:ring-primaryDark sm:text-sm ${bg}`
+                "relative flex h-12 w-full cursor-default items-center rounded-xl border bg-white pl-4 pr-10 text-left font-open text-base font-medium text-[#2c1728] outline-none transition-colors focus-within:border-[#d4af6a] focus-within:ring-2 focus-within:ring-[#d4af6a]/20",
+                error ? "border-red-500 ring ring-red-200" : "border-[#2c1728]/15",
+                disabled ? "opacity-60" : ""
               )}
             >
               <Combobox.Input
                 autoComplete="off"
                 onChange={(event) => setQuery(event.target.value)}
                 title={query || value?.name || placeholder || ""}
-                className={`${text} ${bg} sm:text-md block truncate text-lg font-semibold tracking-tight focus:outline-none placeholder:${text} placeholder:opacity-80`}
+                className="block w-full truncate bg-transparent font-open text-base font-medium text-[#2c1728] outline-none placeholder:text-[#a58d90]"
                 placeholder={placeholder || ""}
                 displayValue={(option: SelectOption | undefined) =>
                   option?.name || ""
                 }
               />
               {!disabled && (
-                <Combobox.Button className="absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
+                <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-3">
                   <ChevronDownIcon
-                    className={`h-5 w-5 ${text}`}
+                    className="h-4 w-4 text-[#d4af6a]"
                     aria-hidden="true"
                     onClick={() => setQuery("")}
                   />
@@ -91,13 +94,13 @@ export default function Select({
                 leaveFrom="opacity-100"
                 leaveTo="opacity-0"
               >
-                <Combobox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md border border-black bg-white py-1 text-base shadow-lg ring-opacity-5 focus:outline-none sm:text-sm">
+                <Combobox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-xl border border-[#2c1728]/10 bg-white py-1 font-open text-sm shadow-[0_16px_38px_rgba(44,23,40,0.16)] focus:outline-none">
                   {filteredOptions.map((option) => (
                     <Combobox.Option
                       key={option.value}
                       className={({ active }) =>
                         classNames(
-                          active ? `${bg} ${text}` : "text-gray-900",
+                          active ? "bg-[#f5f1ed] text-[#2c1728]" : "text-[#2c1728]",
                           "relative cursor-pointer select-none py-2 pl-3 pr-9"
                         )
                       }
@@ -108,14 +111,14 @@ export default function Select({
                           <div className="flex items-center">
                             <div
                               title={option.name}
-                              className="sm:text-md ml-1 block truncate text-lg font-normal tracking-tight ui-selected:font-semibold"
+                              className="ml-1 block truncate font-open text-sm font-normal tracking-tight ui-selected:font-semibold"
                             >
                               {option.name}
                             </div>
                           </div>
 
                           {selected ? (
-                            <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-primaryDark ui-active:text-white">
+                            <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-[#d4af6a]">
                               <CheckIcon
                                 className="h-5 w-5"
                                 aria-hidden="true"

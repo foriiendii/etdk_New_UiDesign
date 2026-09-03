@@ -27,12 +27,12 @@ export const ContributionField = ({
         render={({ field: { onChange, value } }) => {
           return (
             <div className="flex flex-col">
-              <span className="pl-3">Hozzájárulási nyilatkozat</span>
+              <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">Hozzájárulási nyilatkozat</span>
               <label>
                 <div
                   className={classNames(
-                    "block h-11 w-full rounded-xl border-none pl-3 text-lg font-semibold placeholder:opacity-80 focus:border-primaryDark focus:ring-primaryDark",
-                    "flex cursor-pointer items-center  bg-application3 pl-4 text-primaryDark"
+                    "block h-12 w-full rounded-xl border border-[#2c1728]/15 bg-white px-4 font-open text-base font-medium text-[#2c1728] outline-none transition-colors placeholder:font-normal placeholder:text-[#a58d90] focus:border-[#d4af6a] focus:ring-2 focus:ring-[#d4af6a]/20",
+                    "flex cursor-pointer items-center gap-2"
                   )}
                 >
                   <div className="overflow-hidden truncate opacity-80">

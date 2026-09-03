@@ -4,7 +4,12 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
 } from "@heroicons/react/20/solid";
-import { TrashIcon } from "@heroicons/react/24/outline";
+import {
+  ExclamationTriangleIcon,
+  PlusIcon,
+  TrashIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { fetcher } from "@lib/queries";
 import { getClient } from "@lib/sanity";
 import RichText from "@utils/RichText";
@@ -575,7 +580,7 @@ const ApplicationForm = ({
       return (
         <div className="flex flex-col items-center md:flex-row ">
           <button
-            className="rounded-xl bg-gray-900 py-2 px-4 text-white md:mr-6"
+            className="inline-flex items-center gap-2 rounded-xl border border-[#2c1728]/15 bg-white px-4 py-2.5 font-open text-sm font-semibold text-[#2c1728] transition-colors hover:border-[#d4af6a] hover:bg-[#faf7f4]"
             onClick={() => {
               const projectValues = projectGetValues(`projects.${index}`);
               update(index, {
@@ -594,6 +599,7 @@ const ApplicationForm = ({
               });
             }}
           >
+            <PlusIcon className="h-4 w-4 text-[#d4af6a]" />
             <p>Témavezető hozzáadása</p>
           </button>
         </div>
@@ -611,7 +617,7 @@ const ApplicationForm = ({
       return (
         <div className="flex flex-col items-center md:flex-row ">
           <button
-            className="rounded-xl bg-gray-900 py-2 px-4 text-white md:mr-6"
+            className="inline-flex items-center gap-2 rounded-xl border border-[#2c1728]/15 bg-white px-4 py-2.5 font-open text-sm font-semibold text-[#2c1728] transition-colors hover:border-[#d4af6a] hover:bg-[#faf7f4]"
             onClick={() => {
               const projectValues = projectGetValues(`projects.${index}`);
               update(index, {
@@ -638,6 +644,7 @@ const ApplicationForm = ({
               });
             }}
           >
+            <PlusIcon className="h-4 w-4 text-[#d4af6a]" />
             <p>Társszerző hozzáadása</p>
           </button>
         </div>
@@ -647,10 +654,10 @@ const ApplicationForm = ({
   };
 
   return (
-    <div className="flex min-h-[100vh] min-w-full flex-col items-center bg-white pb-40 pt-[66px]">
+    <div className="flex min-h-[100vh] min-w-full flex-col items-center bg-[#f5f1ed] pb-40 pt-[66px]">
       <div className="w-full space-y-4 md:w-[720px]">
-        <div className="h-fit w-full space-y-4 bg-lightGray px-2 py-6 md:p-6 ">
-          <p className="text-3xl text-primaryDark">Személyes adatok:</p>
+        <div className="space-y-5 rounded-2xl border border-[#2c1728]/10 bg-white p-5 shadow-[0_16px_45px_rgba(44,23,40,0.06)] md:p-7">
+          <p className="font-bebas text-3xl uppercase tracking-wide text-[#2c1728] md:text-4xl">Személyes adatok</p>
           <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:pl-2">
             <Controller
               name="name"
@@ -660,7 +667,7 @@ const ApplicationForm = ({
                 fieldState: { error },
               }) => (
                 <div className="flex flex-col">
-                  <span className="pl-3">Név</span>
+                  <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">Név</span>
                   <input
                     value={value}
                     onChange={(e) => {
@@ -672,7 +679,7 @@ const ApplicationForm = ({
                     className={classNames(
                       inputClasses,
                       error ? "ring ring-red-700" : "",
-                      "bg-application1 text-primaryDark placeholder:text-primaryDark"
+                      ""
                     )}
                     placeholder="Név"
                     disabled={closed}
@@ -688,7 +695,7 @@ const ApplicationForm = ({
                 fieldState: { error },
               }) => (
                 <div className="flex flex-col">
-                  <span className="pl-3">
+                  <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">
                     Hallgatói azonosító (nr. matricol)
                   </span>
                   <input
@@ -702,7 +709,7 @@ const ApplicationForm = ({
                     className={classNames(
                       inputClasses,
                       error ? "ring ring-red-700" : "",
-                      "bg-application1 text-primaryDark placeholder:text-primaryDark"
+                      ""
                     )}
                     placeholder="Hallgatói azonosító (nr. matricol)"
                     disabled={closed}
@@ -854,7 +861,7 @@ const ApplicationForm = ({
                 fieldState: { error },
               }) => (
                 <div className="flex flex-col">
-                  <span className="pl-3">E-mail cím</span>
+                  <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">E-mail cím</span>
                   <input
                     value={value}
                     onChange={(e) => {
@@ -867,7 +874,7 @@ const ApplicationForm = ({
                     className={classNames(
                       inputClasses,
                       error ? "ring ring-red-700" : "",
-                      "bg-application1 text-primaryDark placeholder:text-primaryDark"
+                      ""
                     )}
                     placeholder="E-mail cím"
                   />
@@ -882,7 +889,7 @@ const ApplicationForm = ({
                 fieldState: { error },
               }) => (
                 <div className="flex flex-col">
-                  <span className="pl-3">Telefonszám</span>
+                  <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">Telefonszám</span>
                   <input
                     value={value}
                     onChange={(e) => {
@@ -894,7 +901,7 @@ const ApplicationForm = ({
                     className={classNames(
                       inputClasses,
                       error ? "ring ring-red-700" : "",
-                      "bg-application1 text-primaryDark placeholder:text-primaryDark"
+                      ""
                     )}
                     placeholder="Telefonszám"
                     disabled={closed}
@@ -911,7 +918,7 @@ const ApplicationForm = ({
               }) => {
                 return (
                   <div className="flex flex-col">
-                    <span className="pl-3">
+                    <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">
                       Hallgatói jogviszonyt igazoló dokumentum
                     </span>
                     <label>
@@ -919,7 +926,7 @@ const ApplicationForm = ({
                         className={classNames(
                           inputClasses,
                           error ? "ring ring-red-700" : "",
-                          "flex cursor-pointer items-center bg-application1 pl-4  text-primaryDark placeholder:text-primaryDark"
+                          "flex cursor-pointer items-center gap-2"
                         )}
                       >
                         <div className="overflow-hidden truncate opacity-80">
@@ -954,7 +961,7 @@ const ApplicationForm = ({
                       />
                     </label>
                     {error && error.type === "custom" && (
-                      <p className="pt-1 pl-3 text-sm text-red-600">
+                      <p className="pl-1 pt-1 font-open text-xs font-medium text-red-600">
                         {error.message}
                       </p>
                     )}
@@ -972,14 +979,14 @@ const ApplicationForm = ({
               }) => {
                 return (
                   <div className="flex flex-col">
-                    <span className="pl-3">Kifizetési bizonylat</span>
+                    <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">Kifizetési bizonylat</span>
 
                     <label>
                       <div
                         className={classNames(
                           inputClasses,
                           error ? "ring ring-red-700" : "",
-                          "flex cursor-pointer items-center bg-application1 pl-4 text-primaryDark  placeholder:text-primaryDark "
+                          "flex cursor-pointer items-center gap-2"
                         )}
                       >
                         <div className="overflow-hidden truncate opacity-80">
@@ -1003,7 +1010,7 @@ const ApplicationForm = ({
                     </label>
                     {paymentLink && (
                       <LinkWrapper href={paymentLink}>
-                        <p className="pl-3 text-sm text-blue-400 underline hover:text-purple-400">
+                        <p className="pl-1 font-open text-xs font-semibold text-[#a77f35] underline transition-colors hover:text-[#2c1728]">
                           Befizetés
                         </p>
                       </LinkWrapper>
@@ -1018,13 +1025,13 @@ const ApplicationForm = ({
           <Disclosure defaultOpen={index === 0} key={project.id}>
             {({ open }) => (
               <>
-                <Disclosure.Button className="flex w-full items-center rounded-xl bg-application3 py-2 px-4">
-                  <p className="flex-1 text-start text-lg text-primaryDark">
+                <Disclosure.Button className="flex w-full items-center gap-3 rounded-xl border border-[#2c1728]/10 bg-white px-5 py-3.5 shadow-[0_8px_20px_rgba(44,23,40,0.05)] transition-colors hover:border-[#d4af6a]/60">
+                  <p className="flex-1 text-start font-open text-base font-semibold text-[#2c1728]">
                     {index + 1}. Dolgozat adatai
                   </p>
                   {fields.length > 1 && !defaultValues && (
                     <TrashIcon
-                      className="mr-6 h-7 w-7 text-primaryDark"
+                      className="h-5 w-5 shrink-0 cursor-pointer text-[#a58d90] transition-colors hover:text-red-500"
                       onClick={(e) => {
                         e.preventDefault();
                         remove(index);
@@ -1034,12 +1041,12 @@ const ApplicationForm = ({
 
                   {!open ? (
                     <ChevronDownIcon
-                      className="h-7 w-7 text-primaryDark"
+                      className="h-5 w-5 shrink-0 text-[#d4af6a]"
                       aria-hidden="true"
                     />
                   ) : (
                     <ChevronUpIcon
-                      className="h-7 w-7 text-primaryDark"
+                      className="h-5 w-5 shrink-0 text-[#d4af6a]"
                       aria-hidden="true"
                     />
                   )}
@@ -1054,12 +1061,12 @@ const ApplicationForm = ({
                   unmount={false}
                 >
                   <Disclosure.Panel
-                    className="border-2 border-application3 p-2"
+                    className="p-0"
                     unmount={false}
                   >
-                    <div className="h-fit w-full space-y-4 bg-lightGray px-2 py-6 md:w-[700px] md:p-6 ">
-                      <p className="text-3xl text-primaryDark">
-                        {index + 1}. Dolgozat:
+                    <div className="space-y-5 rounded-2xl border border-[#2c1728]/10 bg-white p-5 shadow-[0_16px_45px_rgba(44,23,40,0.06)] md:p-7">
+                      <p className="font-bebas text-3xl uppercase tracking-wide text-[#2c1728] md:text-4xl">
+                        {index + 1}. Dolgozat
                       </p>
                       <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:pl-2">
                         <Controller
@@ -1068,7 +1075,7 @@ const ApplicationForm = ({
                           rules={{ required: true }}
                           render={({ field, fieldState: { error } }) => (
                             <div className="flex flex-col">
-                              <span className="pl-3">Cím</span>
+                              <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">Cím</span>
                               <input
                                 {...field}
                                 type="text"
@@ -1076,7 +1083,7 @@ const ApplicationForm = ({
                                 className={classNames(
                                   inputClasses,
                                   error ? "ring ring-red-700" : "",
-                                  "bg-application3 text-primaryDark placeholder:text-primaryDark"
+                                  ""
                                 )}
                                 placeholder="Cím"
                                 disabled={closed}
@@ -1102,13 +1109,13 @@ const ApplicationForm = ({
                           }) => {
                             return (
                               <div className="flex flex-col">
-                                <span className="pl-3">Kivonat</span>
+                                <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">Kivonat</span>
                                 <label>
                                   <div
                                     className={classNames(
                                       inputClasses,
                                       error ? "ring ring-red-700" : "",
-                                      "flex cursor-pointer items-center  bg-application3 pl-4 text-primaryDark"
+                                      "flex cursor-pointer items-center gap-2"
                                     )}
                                   >
                                     <div className="overflow-hidden truncate opacity-80">
@@ -1177,12 +1184,12 @@ const ApplicationForm = ({
                             render={({ field: { onChange, value } }) => {
                               return (
                                 <div className="flex flex-col">
-                                  <span className="pl-3">Dolgozat</span>
+                                  <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">Dolgozat</span>
                                   <label>
                                     <div
                                       className={classNames(
                                         inputClasses,
-                                        "flex cursor-pointer items-center  bg-application3 pl-4 text-primaryDark"
+                                        "flex cursor-pointer items-center gap-2"
                                       )}
                                     >
                                       <div className="overflow-hidden truncate opacity-80">
@@ -1219,12 +1226,12 @@ const ApplicationForm = ({
                             render={({ field: { onChange, value } }) => {
                               return (
                                 <div className="flex flex-col">
-                                  <span className="pl-3">Melléklet</span>
+                                  <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">Melléklet</span>
                                   <label>
                                     <div
                                       className={classNames(
                                         inputClasses,
-                                        "flex cursor-pointer items-center  bg-application3 pl-4 text-primaryDark"
+                                        "flex cursor-pointer items-center gap-2"
                                       )}
                                     >
                                       <div className="overflow-hidden truncate opacity-80">
@@ -1269,13 +1276,13 @@ const ApplicationForm = ({
                         <Disclosure>
                           {({ open }) => (
                             <>
-                              <Disclosure.Button className="my-4 flex w-full items-center rounded-xl bg-application1 py-2 px-4 ">
-                                <p className="flex-1 text-start text-lg text-primaryDark">
+                              <Disclosure.Button className="my-4 flex w-full items-center gap-3 rounded-xl border border-[#2c1728]/10 bg-[#faf7f4] px-5 py-3 transition-colors hover:border-[#d4af6a]/60">
+                                <p className="flex-1 text-start font-open text-base font-semibold text-[#2c1728]">
                                   {ai + 1}. Témavezető adatai:
                                 </p>
                                 {ai !== 0 && (
                                   <TrashIcon
-                                    className="mr-6 h-7 w-7 text-primaryDark"
+                                    className="h-5 w-5 shrink-0 cursor-pointer text-[#a58d90] transition-colors hover:text-red-500"
                                     onClick={(e) => {
                                       e.preventDefault();
                                       if (
@@ -1303,12 +1310,12 @@ const ApplicationForm = ({
 
                                 {!open ? (
                                   <ChevronDownIcon
-                                    className="h-7 w-7 text-primaryDark"
+                                    className="h-5 w-5 shrink-0 text-[#d4af6a]"
                                     aria-hidden="true"
                                   />
                                 ) : (
                                   <ChevronUpIcon
-                                    className="h-7 w-7 text-primaryDark"
+                                    className="h-5 w-5 shrink-0 text-[#d4af6a]"
                                     aria-hidden="true"
                                   />
                                 )}
@@ -1323,7 +1330,7 @@ const ApplicationForm = ({
                                 unmount={false}
                               >
                                 <Disclosure.Panel unmount={false}>
-                                  <div className="h-fit w-full space-y-4 bg-lightGray px-2 py-6 md:w-[700px] md:p-6 ">
+                                  <div className="space-y-5 rounded-2xl border border-[#2c1728]/10 bg-white p-5 shadow-[0_16px_45px_rgba(44,23,40,0.06)] md:p-7">
                                     <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:pl-2">
                                       <Controller
                                         name={`projects.${index}.advisors.${ai}.name`}
@@ -1334,7 +1341,7 @@ const ApplicationForm = ({
                                           fieldState: { error },
                                         }) => (
                                           <div className="flex flex-col">
-                                            <span className="pl-3">Név</span>
+                                            <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">Név</span>
                                             <input
                                               {...field}
                                               autoComplete="off"
@@ -1344,7 +1351,7 @@ const ApplicationForm = ({
                                                 error
                                                   ? "ring ring-red-700"
                                                   : "",
-                                                "bg-application2 text-white placeholder:text-white"
+                                                ""
                                               )}
                                               placeholder="Név"
                                               disabled={closed}
@@ -1430,7 +1437,7 @@ const ApplicationForm = ({
                                           fieldState: { error },
                                         }) => (
                                           <div className="flex flex-col">
-                                            <span className="pl-3">
+                                            <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">
                                               E-mail cím
                                             </span>
                                             <input
@@ -1442,7 +1449,7 @@ const ApplicationForm = ({
                                                 error
                                                   ? "ring ring-red-700"
                                                   : "",
-                                                "bg-application2 text-white placeholder:text-white"
+                                                ""
                                               )}
                                               placeholder="E-mail cím"
                                               disabled={closed}
@@ -1474,7 +1481,7 @@ const ApplicationForm = ({
                                         }) => {
                                           return (
                                             <div className="flex flex-col">
-                                              <span className="pl-3">
+                                              <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">
                                                 Témavezetői igazolás
                                               </span>
                                               <label>
@@ -1484,7 +1491,7 @@ const ApplicationForm = ({
                                                     error
                                                       ? "ring ring-red-700"
                                                       : "",
-                                                    "flex cursor-pointer items-center bg-application2 pl-4 text-white"
+                                                    "flex cursor-pointer items-center gap-2"
                                                   )}
                                                 >
                                                   <div className="overflow-hidden truncate opacity-80">
@@ -1530,12 +1537,12 @@ const ApplicationForm = ({
                         <Disclosure>
                           {({ open }) => (
                             <>
-                              <Disclosure.Button className="my-4 flex w-full items-center rounded-xl bg-application1 py-2 px-4 ">
-                                <p className="flex-1 text-start text-lg text-primaryDark">
+                              <Disclosure.Button className="my-4 flex w-full items-center gap-3 rounded-xl border border-[#2c1728]/10 bg-[#faf7f4] px-5 py-3 transition-colors hover:border-[#d4af6a]/60">
+                                <p className="flex-1 text-start font-open text-base font-semibold text-[#2c1728]">
                                   {ci + 1}. Társszerző adatok:
                                 </p>
                                 <TrashIcon
-                                  className="mr-6 h-7 w-7 text-primaryDark"
+                                  className="h-5 w-5 shrink-0 cursor-pointer text-[#a58d90] transition-colors hover:text-red-500"
                                   onClick={(e) => {
                                     e.preventDefault();
                                     if (
@@ -1562,12 +1569,12 @@ const ApplicationForm = ({
 
                                 {!open ? (
                                   <ChevronDownIcon
-                                    className="h-7 w-7 text-primaryDark"
+                                    className="h-5 w-5 shrink-0 text-[#d4af6a]"
                                     aria-hidden="true"
                                   />
                                 ) : (
                                   <ChevronUpIcon
-                                    className="h-7 w-7 text-primaryDark"
+                                    className="h-5 w-5 shrink-0 text-[#d4af6a]"
                                     aria-hidden="true"
                                   />
                                 )}
@@ -1582,7 +1589,7 @@ const ApplicationForm = ({
                                 unmount={false}
                               >
                                 <Disclosure.Panel unmount={false}>
-                                  <div className="h-fit w-full space-y-4 bg-lightGray px-2 py-6 md:w-[700px] md:p-6 ">
+                                  <div className="space-y-5 rounded-2xl border border-[#2c1728]/10 bg-white p-5 shadow-[0_16px_45px_rgba(44,23,40,0.06)] md:p-7">
                                     <div className="grid grid-cols-1 gap-2 md:grid-cols-2 md:pl-2">
                                       <Controller
                                         name={`projects.${index}.companions.${ci}.name`}
@@ -1593,7 +1600,7 @@ const ApplicationForm = ({
                                           fieldState: { error },
                                         }) => (
                                           <div className="flex flex-col">
-                                            <span className="pl-3">Név</span>
+                                            <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">Név</span>
                                             <input
                                               {...field}
                                               autoComplete="off"
@@ -1603,7 +1610,7 @@ const ApplicationForm = ({
                                                 error
                                                   ? "ring ring-red-700"
                                                   : "",
-                                                "bg-application1 text-primaryDark placeholder:text-primaryDark"
+                                                ""
                                               )}
                                               placeholder="Név"
                                               disabled={closed}
@@ -1620,7 +1627,7 @@ const ApplicationForm = ({
                                           fieldState: { error },
                                         }) => (
                                           <div className="flex flex-col">
-                                            <span className="pl-3">
+                                            <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">
                                               Hallgatói azonosító (nr. matricol)
                                             </span>
                                             <input
@@ -1632,7 +1639,7 @@ const ApplicationForm = ({
                                                 error
                                                   ? "ring ring-red-700"
                                                   : "",
-                                                "bg-application1 text-primaryDark placeholder:text-primaryDark"
+                                                ""
                                               )}
                                               placeholder="Hallgatói azonosító (nr. matricol)"
                                               disabled={closed}
@@ -1817,7 +1824,7 @@ const ApplicationForm = ({
                                           fieldState: { error },
                                         }) => (
                                           <div className="flex flex-col">
-                                            <span className="pl-3">
+                                            <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">
                                               E-mail cím
                                             </span>
                                             <input
@@ -1832,7 +1839,7 @@ const ApplicationForm = ({
                                                 error
                                                   ? "ring ring-red-700"
                                                   : "",
-                                                "bg-application1 text-primaryDark placeholder:text-primaryDark"
+                                                ""
                                               )}
                                               placeholder="E-mail cím"
                                             />
@@ -1855,7 +1862,7 @@ const ApplicationForm = ({
                                           fieldState: { error },
                                         }) => (
                                           <div className="flex flex-col">
-                                            <span className="pl-3">
+                                            <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">
                                               Telefonszám
                                             </span>
                                             <input
@@ -1867,7 +1874,7 @@ const ApplicationForm = ({
                                                 error
                                                   ? "ring ring-red-700"
                                                   : "",
-                                                "bg-application1 text-primaryDark placeholder:text-primaryDark"
+                                                ""
                                               )}
                                               placeholder="Telefonszám"
                                               disabled={closed}
@@ -1885,7 +1892,7 @@ const ApplicationForm = ({
                                         }) => {
                                           return (
                                             <div className="flex flex-col">
-                                              <span className="pl-3">
+                                              <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">
                                                 Hallgatói jogviszonyt igazoló
                                                 dokumentum
                                               </span>
@@ -1897,7 +1904,7 @@ const ApplicationForm = ({
                                                     error
                                                       ? "ring ring-red-700"
                                                       : "",
-                                                    "flex cursor-pointer items-center bg-application1 pl-4 text-primaryDark  placeholder:text-primaryDark "
+                                                    "flex cursor-pointer items-center gap-2"
                                                   )}
                                                 >
                                                   <div className="overflow-hidden truncate opacity-80">
@@ -1952,7 +1959,7 @@ const ApplicationForm = ({
                                               </label>
                                               {error &&
                                                 error.type === "custom" && (
-                                                  <p className="pt-1 pl-3 text-sm text-red-600">
+                                                  <p className="pl-1 pt-1 font-open text-xs font-medium text-red-600">
                                                     {error.message}
                                                   </p>
                                                 )}
@@ -1970,7 +1977,7 @@ const ApplicationForm = ({
                                         }) => {
                                           return (
                                             <div className="flex flex-col">
-                                              <span className="pl-3">
+                                              <span className="mb-1 block pl-1 font-open text-[11px] font-bold uppercase tracking-[0.12em] text-[#a58d90]">
                                                 Kifizetési bizonylat
                                               </span>
 
@@ -1981,7 +1988,7 @@ const ApplicationForm = ({
                                                     error
                                                       ? "ring ring-red-700"
                                                       : "",
-                                                    "flex cursor-pointer items-center bg-application1 pl-4 text-primaryDark  placeholder:text-primaryDark "
+                                                    "flex cursor-pointer items-center gap-2"
                                                   )}
                                                 >
                                                   <div className="overflow-hidden truncate opacity-80">
@@ -2039,7 +2046,7 @@ const ApplicationForm = ({
 
         {!defaultValues && (
           <button
-            className="ml-3 rounded-xl bg-gray-900 py-2 px-4 text-white md:mr-6"
+            className="ml-3 inline-flex items-center gap-2 rounded-xl border border-[#2c1728]/15 bg-white px-4 py-2.5 font-open text-sm font-semibold text-[#2c1728] transition-colors hover:border-[#d4af6a] hover:bg-[#faf7f4] md:mr-6"
             onClick={() =>
               append({
                 advisors: [
@@ -2061,22 +2068,23 @@ const ApplicationForm = ({
               })
             }
           >
+            <PlusIcon className="h-4 w-4 text-[#d4af6a]" />
             <p>Új dolgozat hozzáadása</p>
           </button>
         )}
       </div>
       {!defaultValues && (
-        <div className="mt-16 mb-4 flex space-x-4 p-4 md:p-0">
+        <div className="mt-16 mb-4 flex items-start gap-3 rounded-xl border border-[#2c1728]/10 bg-white p-4 md:max-w-[560px]">
           <input
             type="checkbox"
             value={`${gdprApproved}`}
             onChange={(e) => setGdprApproved(e.target.checked)}
-            className="cursor-pointer"
+            className="mt-1 h-4 w-4 shrink-0 cursor-pointer accent-[#2c1728]"
           />
-          <p>
-            A <b>Mentés</b> gombra való kattintáshoz el kell fogadd a
+          <p className="font-open text-sm leading-6 text-[#2c1728]">
+            A <b>Mentés</b> gombra való kattintáshoz el kell fogadd a{" "}
             <b
-              className="cursor-pointer text-blue-600"
+              className="cursor-pointer text-[#a77f35] transition-colors hover:text-[#2c1728]"
               onClick={() => setGdprDialog(true)}
             >
               <u>feltételeket</u>
@@ -2089,7 +2097,7 @@ const ApplicationForm = ({
         <button
           className={classNames(
             !!defaultValues ? "mt-10" : "",
-            "flex h-10 w-40 items-center justify-center rounded-xl bg-primaryLight py-2 px-4 font-bold text-white disabled:bg-gray-200"
+            "flex h-12 items-center justify-center gap-2 rounded-xl bg-[#2c1728] px-8 font-open text-sm font-semibold uppercase tracking-wide text-white shadow-[0_10px_25px_rgba(44,23,40,0.25)] transition-colors hover:bg-[#4a2940] disabled:cursor-not-allowed disabled:bg-[#2c1728]/25 disabled:shadow-none"
           )}
           onClick={() => submitData()}
           disabled={
@@ -2105,8 +2113,9 @@ const ApplicationForm = ({
 
       {(!!Object.keys(projectErrors).length ||
         !!Object.keys(personErrors).length) && (
-        <div className="mt-4">
-          <p className="text-red-600">
+        <div className="mt-4 flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3">
+          <ExclamationTriangleIcon className="h-5 w-5 shrink-0 text-red-500" />
+          <p className="font-open text-sm font-medium text-red-600">
             Ellenőrizd, hogy minden adat helyesen van bevezetve.
           </p>
         </div>
@@ -2127,7 +2136,7 @@ const ApplicationForm = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            <div className="fixed inset-0 bg-[rgba(0,0,0,0.7)] transition-opacity" />
           </Transition.Child>
 
           <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -2141,25 +2150,21 @@ const ApplicationForm = ({
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative flex transform flex-col items-center justify-center space-y-4 rounded-lg bg-white p-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                  <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                    <div className="sm:flex sm:items-start">
-                      <p className="text-center text-2xl text-black">
-                        Biztos a kitöltött adatok helyességében?
-                      </p>
-                    </div>
-                  </div>
-                  <div className=" px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                <Dialog.Panel className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-[#f6efe6] p-6 text-center shadow-xl transition-all sm:p-8">
+                  <p className="font-bebas text-2xl uppercase tracking-wide text-[#2c1728] sm:text-3xl">
+                    Biztos a kitöltött adatok helyességében?
+                  </p>
+                  <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-center">
                     <button
                       type="button"
-                      className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                      className="rounded-lg border border-[#2c1728]/20 bg-white px-5 py-2.5 font-open text-sm font-semibold text-[#2c1728] transition-colors hover:bg-[#efe6da]"
                       onClick={() => setConfirmDialog(false)}
                     >
-                      Bezárás
+                      Mégse
                     </button>
                     <button
                       type="button"
-                      className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                      className="rounded-lg bg-[#2c1728] px-5 py-2.5 font-open text-sm font-semibold text-white transition-colors hover:bg-[#4a2940]"
                       onClick={() => {
                         setConfirmDialog(false);
                         onSubmit();
@@ -2190,7 +2195,7 @@ const ApplicationForm = ({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+              <div className="fixed inset-0 bg-[rgba(0,0,0,0.7)] transition-opacity" />
             </Transition.Child>
 
             <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -2204,8 +2209,20 @@ const ApplicationForm = ({
                   leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                   leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                 >
-                  <Dialog.Panel className="relative flex transform flex-col items-center justify-center space-y-4 rounded-lg bg-white p-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                    <div className="prose max-w-none">
+                  <Dialog.Panel className="relative flex max-h-[85vh] w-full max-w-2xl transform flex-col overflow-hidden rounded-2xl bg-[#f6efe6] p-6 text-left shadow-xl transition-all sm:p-8">
+                    <div className="mb-4 flex items-start justify-between gap-4">
+                      <span className="font-bebas text-2xl uppercase tracking-wide text-[#2c1728] sm:text-3xl">
+                        Adatkezelési feltételek
+                      </span>
+                      <button
+                        type="button"
+                        className="shrink-0 cursor-pointer text-[#2c1728]"
+                        onClick={() => setGdprDialog(false)}
+                      >
+                        <XMarkIcon className="h-6 w-6" />
+                      </button>
+                    </div>
+                    <div className="prose prose-neutral max-w-none overflow-y-auto pr-1">
                       <RichText blocks={gdpr} />
                     </div>
                   </Dialog.Panel>
@@ -2234,7 +2251,7 @@ const ApplicationForm = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            <div className="fixed inset-0 bg-[rgba(0,0,0,0.7)] transition-opacity" />
           </Transition.Child>
 
           <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -2248,33 +2265,33 @@ const ApplicationForm = ({
                 leaveFrom="opacity-100 translate-y-0 sm:scale-100"
                 leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
               >
-                <Dialog.Panel className="relative flex transform flex-col items-center justify-center space-y-4 rounded-lg bg-white p-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
-                  <div className="flex flex-col items-center">
-                    <div className="flex items-center">
-                      <CheckBadgeIcon className="h-12 w-12 text-green-300" />
-                      <p className="text-xl">Sikeres jelentkezés</p>
-                    </div>
-                    <div className="flex">
-                      Jelszó:
-                      <p className="pl-5 font-black">{confirmationMessage}</p>
-                    </div>
-                    <p className="pl-5 text-center text-sm">
-                      Ezt jegyezd le, a későbbiekben ennek a segítségével tudod
-                      majd a feltöltőtt adatokat kiegészíteni.
+                <Dialog.Panel className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-[#f6efe6] p-6 text-center shadow-xl transition-all sm:p-8">
+                  <CheckBadgeIcon className="mx-auto h-12 w-12 text-[#d4af6a]" />
+                  <p className="mt-3 font-bebas text-2xl uppercase tracking-wide text-[#2c1728] sm:text-3xl">
+                    Sikeres jelentkezés
+                  </p>
+                  <div className="mt-4 rounded-xl border border-[#2c1728]/10 bg-white px-4 py-3">
+                    <p className="font-open text-[11px] font-bold uppercase tracking-[0.14em] text-[#a58d90]">
+                      Jelszó
+                    </p>
+                    <p className="mt-1 font-open text-lg font-bold text-[#2c1728]">
+                      {confirmationMessage}
                     </p>
                   </div>
-                  <div className="flex w-full justify-end">
-                    <button
-                      type="button"
-                      className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                      onClick={() => {
-                        setConfirmationMessage("");
-                        router.push("/");
-                      }}
-                    >
-                      Bezárás
-                    </button>
-                  </div>
+                  <p className="mt-4 font-open text-sm leading-6 text-[#766561]">
+                    Ezt jegyezd le, a későbbiekben ennek a segítségével tudod
+                    majd a feltöltőtt adatokat kiegészíteni.
+                  </p>
+                  <button
+                    type="button"
+                    className="mt-6 w-full rounded-lg bg-[#2c1728] px-5 py-2.5 font-open text-sm font-semibold text-white transition-colors hover:bg-[#4a2940]"
+                    onClick={() => {
+                      setConfirmationMessage("");
+                      router.push("/");
+                    }}
+                  >
+                    Bezárás
+                  </button>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

@@ -7,7 +7,6 @@ import {
 import { getClient } from "@lib/sanity";
 import NextAuth from "next-auth";
 import { SessionStrategy } from "next-auth/core/types";
-import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -35,10 +34,6 @@ export const authOptions = (_req: NextApiRequest, res: NextApiResponse) => ({
           return userData[0];
         }
       },
-    }),
-    GoogleProvider({
-      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_SECRET as string,
     }),
   ],
   secret: process.env.JWT_SECRET,
